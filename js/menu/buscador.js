@@ -146,38 +146,45 @@ function getLonLatFromIP(ip,busqueda){
 
 				setActiveChapter(busqueda);
 				
-				map.loadImage("https://i.imgur.com/MK4NUzI.png", function(error, image) {
-				      	if (error) throw error;
-				      	map.addImage("custom-marker", image);
-				      	map.addLayer({
-						id: busqueda,
-						type: "symbol",
-						source: {
-						  type: "geojson",
-						  data: {
-						    type: "FeatureCollection",
-						    features:[{
-							type: 'Feature',
-							geometry: {
-							      type: 'Point',
-							      coordinates: [lon, lat]
-							},
-							properties: {
-							      icon: {
-								iconUrl: 'https://www.mapbox.com/mapbox.js/assets/images/astronaut1.png',
-								iconSize: [50, 50],
-								iconAnchor: [25, 25],
-								popupAnchor: [0, -25],
-								className: 'dot'
-							      }
-							}}
-						    ]}
+				popup = new mapboxgl.Popup({ offset: 25 })
+				    .setHTML('<h3 class="nombrePopup">'+busqueda+'</h3><p class="textoPopup">'+ip+'</p>');
+
+				var el = document.createElement('div');
+				el.id = "mark_" + busqueda;
+				el.className = "dominios";
+				new mapboxgl.Marker(el)
+				    .setLngLat([lon,lat])
+				    .setPopup(popup)
+				    .addTo(map);				
+
+			      	map.addLayer({
+					id: busqueda,
+					type: "symbol",
+					source: {
+					  type: "geojson",
+					  data: {
+					    type: "FeatureCollection",
+					    features:[{
+						type: 'Feature',
+						geometry: {
+						      type: 'Point',
+						      coordinates: [lon, lat]
 						},
-						layout: {
-						  "icon-image": "custom-marker",
-						}
-				      	});
-			    	});
+						properties: {
+						      icon: {
+							iconUrl: 'images/database.png',
+							iconSize: [20, 20],
+							iconAnchor: [10, 10],
+							popupAnchor: [0, -10],
+							className: 'dot'
+						      }
+						}}
+					    ]}
+					},
+					layout: {
+					  "icon-image": "custom-marker",
+					}
+			      	});
 				
 				map.flyTo({
 					center: [lon,lat],

@@ -18,10 +18,10 @@ function setActiveChapter(chapterName) {
     if (chapterName === activeChapterName) return;
 
     map.flyTo(puntos[chapterName]);
-    if (document.getElementById(chapterName)){
-    	document.getElementById(chapterName).setAttribute('class', 'active');
-	if(document.getElementById(activeChapterName)){
-    		document.getElementById(activeChapterName).setAttribute('class', '');
+    if (document.getElementById("mark_" + chapterName)){
+    	document.getElementById("mark_" + chapterName).setAttribute('class', 'dominios active');
+	if(document.getElementById("mark_" + activeChapterName)){
+    		document.getElementById("mark_" + activeChapterName).setAttribute('class', 'dominios');
 	}
     }
     activeChapterName = chapterName;

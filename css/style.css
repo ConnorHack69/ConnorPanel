@@ -171,6 +171,21 @@ section:last-child {
     	background-position-x: 95% !important;
 	padding: 15px 75px 15px 15px !important;
 }
+#miubicacion {
+ 	background-image: url('../images/database.png');
+    	background-size: cover;
+    	width: 50px;
+    	height: 50px;
+    	border-radius: 50%;
+    	cursor: pointer;
+}
+.dominios {
+ 	background-image: url('../images/database.png');
+    	background-size: cover;
+    	width: 30px;
+    	height: 30px;
+    	cursor: pointer;
+}
 #gifrandom {
 	position: absolute;
 	bottom: 0px;
