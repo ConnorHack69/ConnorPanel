@@ -1,7 +1,8 @@
 var toggleableLayerIds = [ 
 	{
 		nombre: 'Mi Red', 
-		documento: 'mired.php'
+		documento: 'mired.php',
+		onClickPersonalizado: 'flyToMe'
 	}, {
 		nombre: 'WiFi Gratis', 
 		documento: 'wifigratis.php'
@@ -32,6 +33,10 @@ for (var i = 0; i < toggleableLayerIds.length; i++) {
 		var clickedLayer = this.textContent;
 		e.preventDefault();
 		e.stopPropagation();
+
+		if(this.textContent == 'Mi Red')
+			map.flyToMe();
+
 		if(map.getLayer(clickedLayer)){
 
 			var visibility = map.getLayoutProperty(clickedLayer, 'visibility');
@@ -53,10 +58,12 @@ for (var i = 0; i < toggleableLayerIds.length; i++) {
 				type: 'post',
 				success: function(r){
 					var lines = r.split('\n');
+					var conectados = [];
 					for(var i = 0;i < lines.length;i++){
 					    if(lines[i].includes("Nmap scan report for"))
-					    	console.log("Linea " + i + " : " + lines[i]);
+					    	conectados[conectados.length] = lines[i].split("Nmap scan report for ")[1];
 					}
+					alert(conectados);
 				}
 			});
 		}

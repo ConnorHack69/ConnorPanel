@@ -146,45 +146,7 @@ function getLonLatFromIP(ip,busqueda){
 
 				setActiveChapter(busqueda);
 				
-				popup = new mapboxgl.Popup({ offset: 25 })
-				    .setHTML('<h3 class="nombrePopup">'+busqueda+'</h3><p class="textoPopup">'+ip+'</p>');
-
-				var el = document.createElement('div');
-				el.id = "mark_" + busqueda;
-				el.className = "dominios";
-				new mapboxgl.Marker(el)
-				    .setLngLat([lon,lat])
-				    .setPopup(popup)
-				    .addTo(map);				
-
-			      	map.addLayer({
-					id: busqueda,
-					type: "symbol",
-					source: {
-					  type: "geojson",
-					  data: {
-					    type: "FeatureCollection",
-					    features:[{
-						type: 'Feature',
-						geometry: {
-						      type: 'Point',
-						      coordinates: [lon, lat]
-						},
-						properties: {
-						      icon: {
-							iconUrl: 'images/database.png',
-							iconSize: [20, 20],
-							iconAnchor: [10, 10],
-							popupAnchor: [0, -10],
-							className: 'dot'
-						      }
-						}}
-					    ]}
-					},
-					layout: {
-					  "icon-image": "custom-marker",
-					}
-			      	});
+				map.addMarkerToSource('markers', [lon,lat], busqueda, ip);
 				
 				map.flyTo({
 					center: [lon,lat],

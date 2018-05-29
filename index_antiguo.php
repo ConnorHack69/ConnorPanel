@@ -34,8 +34,8 @@
 		<div id='features'></div>
 		<div id="">
 	</div>
-	<script src='js/map_config.js'></script>
-	<script src='js/map.js'></script>
+	<script src="http://vizjs.org/viz.v1.3.0.min.js"></script>
+	<script src='js/antiguo_map.js'></script>
 	<script src='js/menu/buscador.js'></script>
 	<script src='js/menu/load.js'></script>
 	<script src='js/lateral/scroll.js'></script>
