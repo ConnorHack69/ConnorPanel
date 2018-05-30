@@ -19,7 +19,6 @@
 	<link href='https://api.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v1.0.0/MarkerCluster.css' rel='stylesheet' />
 	<link href='https://api.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v1.0.0/MarkerCluster.Default.css' rel='stylesheet' />
 
-
 	<link href='css/style.css' rel='stylesheet' />
 	<link rel="stylesheet" href="css/font-awesome.min.css">
 </head>
@@ -34,9 +33,9 @@
 					<img src="images/minimizar.png" alt="Cerrar Panel" id="cerrarPanel"></img>
 				</div>
 				<div class="panelMiRedMarker">
-					<div class="huecoVacio"></div>
+					<div class="huecoVacio"><span id="panelMiRedIp"></span></div>
 					<div class="markerMiRed"></div>
-					<div class="huecoVacio"></div>
+					<div class="huecoVacio"><span id="panelMiRedInterfaz"></span></div>
 				</div>
 				<div class="infoMiRed"></div>
 			</div>

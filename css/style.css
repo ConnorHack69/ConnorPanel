@@ -73,6 +73,9 @@ body {
     	background: #3074a436;
     	border-radius: 10px;
 }
+.herramientasFull {
+	height: 100%;
+}
 input:focus,
 select:focus,
 textarea:focus,
@@ -204,7 +207,7 @@ section:last-child {
 	height: 600px;
 	background: transparent;
 	margin: auto;
-	margin-top: 215px;
+	margin-top: 60px;
     	border-radius: 30px 30px;
     	border: 3px solid #33634d;
 	display: none;
@@ -221,6 +224,8 @@ section:last-child {
 	height: 200px;
 }
 #panelMiRed .huecoVacio {
+	padding-top: 82px;
+	margin-bottom: -90px;
 	background: #1d3c2f;
 	color: #a0d283;
 	width: 200px;
@@ -238,6 +243,14 @@ section:last-child {
 	background: radial-gradient(ellipse at center, rgba(255,50,54,0) 0%,rgba(249,47,50,0) 50%,rgba(51,99,77,1) 54%,rgba(29,60,47,1) 58%,rgba(29,60,47,1) 100%);
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ff3236', endColorstr='#1d3c2f',GradientType=1 );
 }
+#panelMiRed .markerMiRed:hover {
+	background: rgb(255,50,54);
+	background: -moz-radial-gradient(center, ellipse cover, rgba(29,60,47,1) 0%, rgba(29,60,47,1) 50%, rgba(29,60,47,1) 54%, rgba(29,60,47,1) 58%, rgba(29,60,47,1) 100%);
+	background: -webkit-radial-gradient(center, ellipse cover, rgba(29,60,47,1) 0%,rgba(29,60,47,1) 50%,rgba(29,60,47,1) 54%,rgba(29,60,47,1) 58%,rgba(29,60,47,1) 100%);
+	background: radial-gradient(ellipse at center, rgba(29,60,47,1) 0%,rgba(29,60,47,1) 50%,rgba(51,99,77,1) 54%,rgba(29,60,47,1) 58%,rgba(29,60,47,1) 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#1d3c2f', endColorstr='#1d3c2f',GradientType=1 );
+	transition: background 1.5s ease;
+}
 #panelMiRed .infoMiRed {
 	clear: both;
 	width: 600px;
@@ -245,6 +258,17 @@ section:last-child {
 	background: #1d3c2f;
 	color: #a0d283;
 	border-radius: 0px 0px 27px 27px;
+}
+#panelMiRedIp {
+    	margin: 28%;
+    	font-size: 28px;
+}
+#panelMiRedMiIP {
+	margin : 32%;
+}
+#panelMiRedInterfaz {
+    	margin: 18%;
+	font-size: 20px;
 }
 .cargando {
 	font-size: 32px;

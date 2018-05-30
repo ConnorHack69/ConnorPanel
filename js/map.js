@@ -1,3 +1,9 @@
+var $cerrarPanel = $('#cerrarPanel');
+$cerrarPanel.on('click', function () {
+  	map.enableInteract();
+	document.getElementById("herramientas").classList.remove("herramientasFull");
+	document.getElementById("panelMiRed").style.display = "none";
+});
 map.getAllMarkers = function() {
 	return allMarkers;
 }
@@ -28,7 +34,7 @@ map.setFlyingToLonLat = function(lonLat) {
 map.openPanel = function(){
 	actualLat = map.getCenter()["lat"];
 	actualLon = map.getCenter()["lng"];
-	actualLat -= 0.0006;
+	actualLat -= 0.0055;
 	target = [actualLon,actualLat];
 	map.flyTo({
 		center: target,
@@ -43,12 +49,14 @@ map.openPanel = function(){
 	map.display = true;
 }
 map.addInfoToPanel = function(info) {
+	document.getElementById("panelMiRedIp").innerHTML = interfaceType;
 	var html = "<ul>";
 	for(var i = 0; i < info.length; i++){
 		html += '<li><img src="images/equipo.png" alt="Equipo '+info[i]+'" class="imagenEquipo"/> <b>'+info[i]+'</b></li>'
 	}
 	html += '</ul>';
 	document.getElementsByClassName("infoMiRed")[0].innerHTML = html;
+	document.getElementById("panelMiRedInterfaz").innerHTML = interfaceName + "</br><span id='panelMiRedMiIP'>" + interfaceIP + "</span>";
 }
 map.flyToMe = function() {
 	var target;

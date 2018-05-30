@@ -16,11 +16,26 @@ var start = [tempLat, tempLon];
 var end = [latManual, lonManual];
 var endLonLat = [lonManual, latManual];
 
+var interfaceType;
+var interfaceName;
+var interfaceIP;
+
 var map = new mapboxgl.Map({
     container: 'map',
     style: 'mapbox://styles/ivancorcoles/cjhms0cvi3dz82spapuicuest',
     center: start,
     zoom: 5
+});
+
+$.ajax ({ 
+	url: 'php/getNetInterface.php',
+	type: 'post',
+	fataType: 'json',
+}).done(function(responseData) {
+	var respuesta = JSON.parse(responseData)
+	interfaceType = respuesta.interfaz;
+	interfaceName = respuesta.nombreRed;
+	interfaceIP = respuesta.miIP;
 });
 
 map.on("load", function() {
@@ -32,13 +47,24 @@ map.on("load", function() {
 			var actualLon = map.getCenter()["lng"];
 			var flyingToLat = map.FlyingToLonLat[1];
 			var flyingToLon = map.FlyingToLonLat[0];
-			if(!initialCentering && actualLat.toFixed(5) == flyingToLat.toFixed(5) && actualLon.toFixed(5) == flyingToLon.toFixed(5))
+			
+			if(!startFlying && !initialCentering && actualLat.toFixed(5) == flyingToLat.toFixed(5) && actualLon.toFixed(5) == flyingToLon.toFixed(5))
 				map.openPanel();
+
+			if(startFlying)
+				startFlying = !startFlying;
 			if(initialCentering)
 				initialCentering = false;
 		} else {
 			if(map.display) {
+				var actualLat = map.getCenter()["lat"];
+				var actualLon = map.getCenter()["lng"];
+				var flyingToLat = map.FlyingToLonLat[1];
+				var flyingToLon = map.FlyingToLonLat[0];
+				if(!startFlying && !initialCentering && ((actualLat.toFixed(5)+0.0055) == (flyingToLat.toFixed(5)) || actualLon.toFixed(5) == flyingToLon.toFixed(5)))
+					map.openPanel();
 				document.getElementById("panelMiRed").style.display = "block";
+				document.getElementById("herramientas").className += " herramientasFull";
 				map.display = null;
 				map.disableInteract();
 			}

@@ -4,8 +4,9 @@ var initialSize=-1;
 var typingTimer;
 var doneTypingInterval = 300;
 var $buscadorInput = $('#buscador');
-var $cerrarPanel = $('#cerrarPanel');
 var buscadorInput = document.getElementById("buscador");
+
+var startFlying = false;
 
 $buscadorInput.on('keyup', function () {
   	clearTimeout(typingTimer);
@@ -14,11 +15,6 @@ $buscadorInput.on('keyup', function () {
 		initialSize = x.size;
        	x.size = ( x.value.length > initialSize ) ? x.value.length : initialSize;
   	typingTimer = setTimeout(buscar, doneTypingInterval);
-});
-
-$cerrarPanel.on('click', function () {
-  	map.enableInteract();
-	document.getElementById("panelMiRed").style.display = "none";
 });
 
 function buscar() {
@@ -153,6 +149,8 @@ function getLonLatFromIP(ip,busqueda){
 				setActiveChapter(busqueda);
 				
 				map.addMarkerToSource('markers', [lon,lat], busqueda, ip);
+				
+				startFlying = true;
 				
 				map.flyTo({
 					center: [lon,lat],
