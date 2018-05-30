@@ -9,11 +9,17 @@ body {
 .mapboxgl-control-container {
 	display: none !important;
 }
+.invisible {
+	display: none;
+}
+.bloqueado {
+	
+}
 #map { 
 	position:absolute !important; 
 	top:0 !important; 
 	bottom:0 !important;
-	width: 97% !important; 
+	width: 100% !important; 
 }
 #interfaz {
 	pointer-events:none;
@@ -192,4 +198,74 @@ section:last-child {
 	left: 0px;
 	width: auto;
 	height: auto;
+}
+#panelMiRed {
+	width: 600px;
+	height: 600px;
+	background: transparent;
+	margin: auto;
+	margin-top: 215px;
+    	border-radius: 30px 30px;
+    	border: 3px solid #33634d;
+	display: none;
+}
+#panelMiRed .tituloMiRed {
+	background: #1d3c2f;
+	color: #a0d283;
+	width: 600px;
+	height: 50px;
+	border-radius: 27px 27px 0px 0px;
+}
+#panelMiRedMarker {
+	width: 600px;
+	height: 200px;
+}
+#panelMiRed .huecoVacio {
+	background: #1d3c2f;
+	color: #a0d283;
+	width: 200px;
+	height: 200px;
+	float: right;
+}
+#panelMiRed .markerMiRed {
+	width: 200px;
+	height: 200px;
+	float: right;
+	color: #a0d283;
+	background: rgb(255,50,54);
+	background: -moz-radial-gradient(center, ellipse cover, rgba(255,50,54,0) 0%, rgba(249,47,50,0) 50%, rgba(51,99,77,1) 54%, rgba(29,60,47,1) 58%, rgba(29,60,47,1) 100%);
+	background: -webkit-radial-gradient(center, ellipse cover, rgba(255,50,54,) 0%,rgba(249,47,50,0) 50%,rgba(51,99,77,1) 54%,rgba(29,60,47,1) 58%,rgba(29,60,47,1) 100%);
+	background: radial-gradient(ellipse at center, rgba(255,50,54,0) 0%,rgba(249,47,50,0) 50%,rgba(51,99,77,1) 54%,rgba(29,60,47,1) 58%,rgba(29,60,47,1) 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ff3236', endColorstr='#1d3c2f',GradientType=1 );
+}
+#panelMiRed .infoMiRed {
+	clear: both;
+	width: 600px;
+	height: 350px;
+	background: #1d3c2f;
+	color: #a0d283;
+	border-radius: 0px 0px 27px 27px;
+}
+.cargando {
+	font-size: 32px;
+}
+.actualizandoDatos {
+	width: 50px;
+}
+.textoCargando {
+    top: -15px;
+    position: relative;
+    padding-left: 10px;
+}
+.imagenEquipo {
+	width: 50px;
+}
+#cerrarPanel{
+    background: #33634d;
+    border-radius: 50%;
+    width: 40px;
+    margin: 10px;
+}
+.mostrarPanel {
+	display: normal !important;
 }

@@ -4,6 +4,7 @@ var initialSize=-1;
 var typingTimer;
 var doneTypingInterval = 300;
 var $buscadorInput = $('#buscador');
+var $cerrarPanel = $('#cerrarPanel');
 var buscadorInput = document.getElementById("buscador");
 
 $buscadorInput.on('keyup', function () {
@@ -13,6 +14,11 @@ $buscadorInput.on('keyup', function () {
 		initialSize = x.size;
        	x.size = ( x.value.length > initialSize ) ? x.value.length : initialSize;
   	typingTimer = setTimeout(buscar, doneTypingInterval);
+});
+
+$cerrarPanel.on('click', function () {
+  	map.enableInteract();
+	document.getElementById("panelMiRed").style.display = "none";
 });
 
 function buscar() {

@@ -1,3 +1,55 @@
+map.getAllMarkers = function() {
+	return allMarkers;
+}
+map.disableInteract = function() {
+	map["scrollZoom"].disable();
+	map["boxZoom"].disable();
+	map["dragRotate"].disable();
+	map["dragPan"].disable();
+	map["keyboard"].disable();
+	map["doubleClickZoom"].disable();
+	map["touchZoomRotate"].disable();
+}
+map.enableInteract = function() {
+	map["scrollZoom"].enable();
+	map["boxZoom"].enable();
+	map["dragRotate"].enable();
+	map["dragPan"].enable();
+	map["keyboard"].enable();
+	map["doubleClickZoom"].enable();
+	map["touchZoomRotate"].enable();
+}
+map.setFlyingTo = function(flyTo){
+	map.flyingTo = flyTo;
+}
+map.setFlyingToLonLat = function(lonLat) {
+	map.FlyingToLonLat = lonLat;
+}
+map.openPanel = function(){
+	actualLat = map.getCenter()["lat"];
+	actualLon = map.getCenter()["lng"];
+	actualLat -= 0.0006;
+	target = [actualLon,actualLat];
+	map.flyTo({
+		center: target,
+		zoom: 14,
+		bearing: 0,
+		speed: 1.6,
+		curve: 1.5,
+		easing: function (t) {
+		    return t;
+		}
+	});
+	map.display = true;
+}
+map.addInfoToPanel = function(info) {
+	var html = "<ul>";
+	for(var i = 0; i < info.length; i++){
+		html += '<li><img src="images/equipo.png" alt="Equipo '+info[i]+'" class="imagenEquipo"/> <b>'+info[i]+'</b></li>'
+	}
+	html += '</ul>';
+	document.getElementsByClassName("infoMiRed")[0].innerHTML = html;
+}
 map.flyToMe = function() {
 	var target;
 	var ipTarget;
@@ -20,6 +72,8 @@ map.flyToMe = function() {
 		if(lon && lat) {
 			target = [lon,lat];
 			map.addMarkerToSource('markers', target, 'Mi ubicación', ip);
+			map.setFlyingTo('Mi ubicacion');
+			map.setFlyingToLonLat(target);
 			map.flyTo({
 				center: target,
 				zoom: 14,
@@ -49,6 +103,8 @@ map.flyToMe = function() {
 					target = [lon,lat];
 					if(target){
 						map.addMarkerToSource('markers', target, 'Mi ubicación', ip);
+						map.setFlyingTo('Mi ubicacion');
+						map.setFlyingToLonLat(target);
 						map.flyTo({
 							center: target,
 							zoom: 14,
@@ -87,9 +143,8 @@ map.addMarkerToSource = function(source, lonLat, titulo, ip) {
 
 	// Recogemos el source (ya existe si o si)
 	var sourceTemp = map.getSource(source);
-
-	// Añadimos al final del array de Features, uno nuevo con los datos recogidos como params
-	sourceTemp._data.features[sourceTemp._data.features.length] = {
+	
+	var nuevoMarker = {
 		"type": "Feature",
 		"geometry": {
 		    "type": "Point",
@@ -100,7 +155,13 @@ map.addMarkerToSource = function(source, lonLat, titulo, ip) {
 		    "marker-symbol": "default_marker"
 		}
     	};
-
+	
+	// Añadimos al final del array de Features, uno nuevo con los datos recogidos como params
+	sourceTemp._data.features[sourceTemp._data.features.length] = nuevoMarker;
+	
+	// Añadimos a la variable global
+	allMarkers[titulo] = nuevoMarker;
+	
 	// Si al layer que se le va a añadir este source ya existe, lo borramos
 	if(map.getLayer(source))
 		map.removeLayer(source);
@@ -121,6 +182,7 @@ map.addMarkerToSource = function(source, lonLat, titulo, ip) {
 	map.addLayer({
 		"id": source,
 		"source": source,
+		"className": "prueba",
 		"type": "circle",
 		"paint": {
 		    "circle-radius": 20,

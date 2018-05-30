@@ -3,5 +3,5 @@
 	$ipArray = explode('.', $ipLocal);
 	$ipRed = $ipArray[0] . "." . $ipArray[1] . "." . $ipArray[2] . ".0";
 	$nmapCompleto =  shell_exec("nmap -sP " . $ipRed . "/24 --exclude " . $ipLocal);
-	echo $nmapCompleto;
+	echo $_POST["queboton"] . "\n" . $nmapCompleto;
 ?>

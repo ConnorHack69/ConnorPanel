@@ -2,6 +2,10 @@ var latManual = -2.6869315;
 var lonManual = 42.854014;
 var popup = '';
 
+var initialCentering = true;
+
+var allMarkers = {};
+
 L.mapbox.accessToken = 'pk.eyJ1IjoiaXZhbmNvcmNvbGVzIiwiYSI6ImNpcHhuc2VlbzAwNzhoem0yeGt2dHowNzMifQ.G57kFhckY4Jq00VrVPJ2AQ';
 mapboxgl.accessToken = 'pk.eyJ1IjoiaXZhbmNvcmNvbGVzIiwiYSI6ImNpcHhuc2VlbzAwNzhoem0yeGt2dHowNzMifQ.G57kFhckY4Jq00VrVPJ2AQ';
 
@@ -20,9 +24,25 @@ var map = new mapboxgl.Map({
 });
 
 map.on("load", function() {
-	map.once('moveend', function(){
+	map.on('moveend', function(){
 		var x = document.getElementById("buscador");
 		x.className = "";
+		if(!map.display && map.flyingTo && map.flyingTo != '' && map.FlyingToLonLat && map.FlyingToLonLat != ''){
+			var actualLat = map.getCenter()["lat"];
+			var actualLon = map.getCenter()["lng"];
+			var flyingToLat = map.FlyingToLonLat[1];
+			var flyingToLon = map.FlyingToLonLat[0];
+			if(!initialCentering && actualLat.toFixed(5) == flyingToLat.toFixed(5) && actualLon.toFixed(5) == flyingToLon.toFixed(5))
+				map.openPanel();
+			if(initialCentering)
+				initialCentering = false;
+		} else {
+			if(map.display) {
+				document.getElementById("panelMiRed").style.display = "block";
+				map.display = null;
+				map.disableInteract();
+			}
+		}
 	});
 	map.add3Dbuildings();
 	map.flyToMe();
@@ -35,22 +55,3 @@ window.addEventListener("keydown",function (e) {
 		document.getElementById("buscador").select();
     }
 })
-
-var isAtStart = true;
-
-$( document ).ready(function() {
-    var target = isAtStart ? end : start;
-
-    isAtStart = !isAtStart;
-
-    map.flyTo({
-	center: target,
-	zoom: 14,
-	bearing: 0,
-	speed: 1.6,
-	curve: 1.5,
-	easing: function (t) {
-	    return t;
-	}
-    });
-});

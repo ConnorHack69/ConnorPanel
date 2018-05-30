@@ -29,10 +29,20 @@
 		<div id="herramientas">
 			<input type="text" name="buscador" id="buscador" size="1" spellcheck="false" autofocus />
 			<nav id="menu"></nav>
+			<div id="panelMiRed">
+				<div class="tituloMiRed">
+					<img src="images/minimizar.png" alt="Cerrar Panel" id="cerrarPanel"></img>
+				</div>
+				<div class="panelMiRedMarker">
+					<div class="huecoVacio"></div>
+					<div class="markerMiRed"></div>
+					<div class="huecoVacio"></div>
+				</div>
+				<div class="infoMiRed"></div>
+			</div>
 		</div>
 		<div id='featuresSombreado'></div>
 		<div id='features'></div>
-		<div id="">
 	</div>
 	<script src='js/map_config.js'></script>
 	<script src='js/map.js'></script>
