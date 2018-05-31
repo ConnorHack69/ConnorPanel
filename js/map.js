@@ -34,8 +34,14 @@ map.setFlyingToLonLat = function(lonLat) {
 map.openPanel = function(){
 	actualLat = map.getCenter()["lat"];
 	actualLon = map.getCenter()["lng"];
-	actualLat -= 0.0055;
-	target = [actualLon,actualLat];
+	//actualLat -= 0.0055;
+	// Mitad del circulo desde arriba : 242 px
+	// Diferencia entre punto anterior y el centro del panel
+	var actualLatPX = (300-242);
+	var point = map.project(map.getCenter());
+	point.y = actualLatPX;
+	var newTarget = map.unproject(point);
+	target = [actualLon,actualLat+(actualLat-newTarget.lat)/2];
 	map.flyTo({
 		center: target,
 		zoom: 14,
