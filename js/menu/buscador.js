@@ -40,7 +40,7 @@ function buscar() {
 				data: {busqueda: busqueda},
 				type: 'post'
 			}).done(function(responseData) {
-				getLonLatFromIP(nslookupToIP(responseData, busqueda, "insertarDominio"),busqueda);
+				getLonLatFromIP(nslookupToIP(responseData),busqueda);
     				x.readOnly = false;
 			}).fail(function(fail) {
 			    	console.log('Fallo encontrando Dominio!');
@@ -58,7 +58,7 @@ function buscar() {
 					data: {busqueda: busqueda},
 					type: 'post'
 				}).done(function(responseData) {
-					getLonLatFromIP(busqueda, nslookupToDomain(responseData, busqueda, "insertarDominio"));
+					getLonLatFromIP(busqueda, nslookupToDomain(responseData));
 	    				x.readOnly = false;
 				}).fail(function(fail) {
 				    	console.log('Fallo encontrando Dominio!');
@@ -71,61 +71,28 @@ function buscar() {
 		}
 	}
 }
-function nslookupToIP(responseData, busqueda, metodo){
+function nslookupToIP(responseData){
 	var lines = responseData.split('\n');
 	for(var i = 0;i < lines.length;i++){
 	    	if(lines[i].includes("Address")){
 			var ip = lines[i].split("\t")[lines[i].split("\t").length-1].split(" ")[1];
 			 if (/^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(ip)){  
-				var parametros = { 
-					"metodo": metodo, 
-					"datos": {
-						"dominio" : busqueda,
-						"ip" : ip
-					}
-				};
-				$.ajax ({ 
-					url: 'php/db/conection.php',
-					data: parametros,
-					type: 'post',
-					datatype: "json"
-				}).done(function(responseData) {
-					//console.log(responseData)
-				}).fail(function(fail) {
-				    	console.log(fail);
-				}).complete(function(data) {
-				});
 				return ip;
 			}
 		}
 	}
 }
-function nslookupToDomain(responseData, busqueda, metodo){
+function nslookupToDomain(responseData){
 	var lines = responseData.split('\n');
+	var onError = "";
 	for(var i = 0;i < lines.length;i++){
 	    	if(lines[i].includes("name = ")){
-			var domain = lines[i].split("name = ")[lines[i].split("name = ").length-1];
-			var parametros = { 
-				"metodo": metodo, 
-				"datos": {
-					"dominio" : domain,
-					"ip" : busqueda
-				}
-			};
-			$.ajax ({ 
-				url: 'php/db/conection.php',
-				data: parametros,
-				type: 'post',
-				datatype: "json"
-			}).done(function(responseData) {
-				//console.log(responseData)
-			}).fail(function(fail) {
-			    	console.log(fail);
-			}).complete(function(data) {
-			});
-			return domain;
+			return lines[i].split("name = ")[lines[i].split("name = ").length-1];
+		} else if (lines[i].includes("server can't find")) {
+			onError = lines[i].split(":")[1].trim();
 		}
 	}
+	return onError;
 }
 function getLonLatFromIP(ip,busqueda){
 	if(ip){
@@ -137,12 +104,16 @@ function getLonLatFromIP(ip,busqueda){
 			var datos = responseData.split(",");
 			var lat = 0;
 			var lon = 0;
+			var location = 0;
 			for(var i = 0;i < datos.length;i++){
 				if(datos[i].includes("latitude")){
 					lat = datos[i].split(":")[1];
 				}
 				if(datos[i].includes("longitude")){
 					lon = datos[i].split(":")[1];
+				}
+				if(datos[i].includes("country_code")){
+					location = (datos[i].split(":")[1]).replace(/['"]+/g, '');
 				}
 			}
 			if(!document.getElementById(busqueda)){
@@ -184,6 +155,29 @@ function getLonLatFromIP(ip,busqueda){
 				};
 
 				setActiveChapter(busqueda);
+				
+				var parametrosInsertarDominio = { 
+					"metodo": "insertarDominio", 
+					"datos": {
+						"dominio" : busqueda,
+						"ip" : ip,
+						"location" : location,
+						"lon" : lon,
+						"lat" : lat
+					}
+				};
+
+				$.ajax ({ 
+					url: 'php/db/conection.php',
+					data: parametrosInsertarDominio,
+					type: 'post',
+					datatype: "json"
+				}).done(function(responseData) {
+					//console.log(responseData)
+				}).fail(function(fail) {
+				    	console.log(fail);
+				}).complete(function(data) {
+				});
 				
 				map.addMarkerToSource('markers', [lon,lat], busqueda, ip);
 				

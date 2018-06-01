@@ -26,7 +26,7 @@
 	<div id='map'></div>
 	<div id='interfaz'>
 		<div id="herramientas">
-			<input type="text" name="buscador" id="buscador" size="1" spellcheck="false" autofocus />
+			<input type="text" name="buscador" id="buscador" size="1" spellcheck="false"  ondrop="dropHandler(event);" autofocus />
 			<nav id="menu"></nav>
 			<div id="panelMiRed">
 				<div class="tituloMiRed">
@@ -45,6 +45,7 @@
 	</div>
 	<script src='js/map_config.js'></script>
 	<script src='js/map.js'></script>
+	<script src='js/draganddrop.js'></script>
 	<script src='js/menu/buscador.js'></script>
 	<script src='js/menu/load.js'></script>
 	<script src='js/lateral/scroll.js'></script>

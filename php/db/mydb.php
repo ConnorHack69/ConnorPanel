@@ -15,14 +15,21 @@
 		}
 		
 		function insertarDominio($datos){
-			$dba = new PDO("sqlite:../../db/ConnorPanel.db");
-			$esDNS = 0;
-			if(strrpos($datos["dominio"], '.') == strlen($datos["dominio"]) - 1)
-				$esDNS = 1;
-			$dba->query('INSERT INTO "dominio" ("dominio","ip","location","lon","lat","dns","idDominioPadre")
-    					VALUES ("'.$datos["dominio"].'","'.$datos["ip"].'", null, null, null, '.$esDNS.', null)') or die("Error insertando dominio");
-			$dba->exec('COMMIT');
-			return "OK";
+			if(empty($this->buscarDominio($datos["dominio"]))){
+				if(isset($datos["dominio"]) && isset($datos["ip"])){
+					$dba = new PDO("sqlite:../../db/ConnorPanel.db");
+					//if(strrpos($datos["dominio"], '.') == strlen($datos["dominio"]) - 1) --> Para saber si es DNS
+					$dba->query('INSERT INTO "dominio" ("dominio","ip","location","lon","lat")
+		    					VALUES ("'.$datos["dominio"].'","'.$datos["ip"].'", "'.$datos["location"].'", '.$datos["lon"].', '.$datos["lat"].')') or die("Error insertando dominio");
+					$dba->exec('COMMIT');
+					return "OK";
+				} else {
+					return "Falta un parametro (dominio / ip)";
+				}
+			} else {
+				
+			}
+			return "Ha fallado";
 		}
 		
 	}

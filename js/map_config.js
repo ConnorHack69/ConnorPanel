@@ -70,6 +70,15 @@ map.on("load", function() {
 			}
 		}
 	});
+	map.on('click', 'markers', function (e) {
+		map.flyTo({center: e.features[0].geometry.coordinates});
+    	});
+	map.on('mouseenter', 'markers', function () {
+        	map.getCanvas().style.cursor = 'pointer';
+    	});
+    	map.on('mouseleave', 'markers', function () {
+        	map.getCanvas().style.cursor = '';
+    	});
 	map.add3Dbuildings();
 	map.flyToMe();
 });
