@@ -40,7 +40,7 @@ function buscar() {
 				data: {busqueda: busqueda},
 				type: 'post'
 			}).done(function(responseData) {
-				getLonLatFromIP(nslookupToIP(responseData),busqueda);
+				getLonLatFromIP(nslookupToIP(responseData, busqueda, "insertarDominio"),busqueda);
     				x.readOnly = false;
 			}).fail(function(fail) {
 			    	console.log('Fallo encontrando Dominio!');
@@ -58,7 +58,7 @@ function buscar() {
 					data: {busqueda: busqueda},
 					type: 'post'
 				}).done(function(responseData) {
-					getLonLatFromIP(busqueda, nslookupToDomain(responseData));
+					getLonLatFromIP(busqueda, nslookupToDomain(responseData, busqueda, "insertarDominio"));
 	    				x.readOnly = false;
 				}).fail(function(fail) {
 				    	console.log('Fallo encontrando Dominio!');
@@ -71,22 +71,59 @@ function buscar() {
 		}
 	}
 }
-function nslookupToIP(responseData){
+function nslookupToIP(responseData, busqueda, metodo){
 	var lines = responseData.split('\n');
 	for(var i = 0;i < lines.length;i++){
 	    	if(lines[i].includes("Address")){
 			var ip = lines[i].split("\t")[lines[i].split("\t").length-1].split(" ")[1];
 			 if (/^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(ip)){  
+				var parametros = { 
+					"metodo": metodo, 
+					"datos": {
+						"dominio" : busqueda,
+						"ip" : ip
+					}
+				};
+				$.ajax ({ 
+					url: 'php/db/conection.php',
+					data: parametros,
+					type: 'post',
+					datatype: "json"
+				}).done(function(responseData) {
+					//console.log(responseData)
+				}).fail(function(fail) {
+				    	console.log(fail);
+				}).complete(function(data) {
+				});
 				return ip;
 			}
 		}
 	}
 }
-function nslookupToDomain(responseData){
+function nslookupToDomain(responseData, busqueda, metodo){
 	var lines = responseData.split('\n');
 	for(var i = 0;i < lines.length;i++){
 	    	if(lines[i].includes("name = ")){
-			return lines[i].split("name = ")[lines[i].split("name = ").length-1];
+			var domain = lines[i].split("name = ")[lines[i].split("name = ").length-1];
+			var parametros = { 
+				"metodo": metodo, 
+				"datos": {
+					"dominio" : domain,
+					"ip" : busqueda
+				}
+			};
+			$.ajax ({ 
+				url: 'php/db/conection.php',
+				data: parametros,
+				type: 'post',
+				datatype: "json"
+			}).done(function(responseData) {
+				//console.log(responseData)
+			}).fail(function(fail) {
+			    	console.log(fail);
+			}).complete(function(data) {
+			});
+			return domain;
 		}
 	}
 }
