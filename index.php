@@ -43,7 +43,8 @@
 				<div class="infoMiRed"></div>
 				<div id="tools"></div>
 			</div>
-			<div class="words"></div>
+			<div id="divShell" class="shell-wrap resizable" draggable="true"></div>
+			<div id="notification" style="display: none;"></div>
 		</div>
 		<div id='featuresSombreado'></div>
 		<div id='features'></div>
@@ -53,11 +54,13 @@
 
 	<!-- Cargamos la configuración de todas las tools que queremos habilitar -->
 	<script src='js/toolsConfiguration/reconocimiento/reconng.js'></script>
+	<script src='js/toolsConfiguration/shell.js'></script>
 
 	<script src='js/map_config.js'></script>
 	<script src='js/map.js'></script>
 	<script src='js/voice.js'></script>
 	<!--<script src='js/musica.js'></script>  Aqui se cargará la funcion de js/musica.js -->
+	<script src='js/notificacion.js'></script>
 	<script src='js/draganddrop.js'></script>
 	<script src='js/menu/buscador.js'></script>
 	<script src='js/menu/load.js'></script>

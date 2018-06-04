@@ -40,7 +40,7 @@ function buscarDominio(busqueda){
 		var datos = getLonLatFromIP(ip, busqueda);
 		buscadorInput.readOnly = false;
 	}).fail(function(fail) {
-	    console.log(CONF.interfaz.panel.buscador.buscarDominioIP.errorAjax);
+	    notificacion.notificar("error", CONF.interfaz.panel.buscador.buscarDominioIP.errorAjax);
 	}).complete(function(data) {
 	});
 }
@@ -61,7 +61,7 @@ function buscarIP(busqueda){
 		var datos = getLonLatFromIP(busqueda, dominio);
 		buscadorInput.readOnly = false;
 	}).fail(function(fail) {
-	    console.log(CONF.interfaz.panel.buscador.buscarDominioIP.errorAjax);
+	    notificacion.notificar("error", CONF.interfaz.panel.buscador.buscarDominioIP.errorAjax);
 	}).complete(function(data) {
 	});
 }
@@ -240,12 +240,12 @@ function agregarMarcadorYVolar(datos){
 		}).done(function(responseData) {
 			//console.log(responseData)
 		}).fail(function(fail) {
-		    console.log(fail);
+		    notificacion.notificar("error", fail);
 		}).complete(function(data) {
 		});
 		
 		map.addMarkerToSource('markers', [lon,lat], busqueda, ip);
-		
+		notificacion.notificar("info", CONF.interfaz.panel.buscador.busquedaPorVoz.msgVolando + " " + busqueda);
 		startFlying = true;
 
 		map.flyTo({
@@ -297,7 +297,7 @@ function getLonLatFromIP(ip,busqueda){
 		}
 	}).done(function(responseData) {
 	}).fail(function() {
-	   	console.log(CONF.interfaz.panel.buscador.getLonLatFromIP.errorAjax);
+	   	notificacion.notificar("error", CONF.interfaz.panel.buscador.getLonLatFromIP.errorAjax);
 	});
 }
 

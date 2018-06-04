@@ -31,12 +31,11 @@ function actualizarInfoRedPanel(){
 	var textoActualizandoDatos = confPanel.textoActualizandoDatos;
 
 	if(infoRed == "")
-		document.getElementsByClassName("infoMiRed")[0].innerHTML = "<div class='actualizacion' style='text-align: center;'><span class='cargando'><img src='" + imagenLoading + "' class='actualizandoDatos' /></img> <blink class='textoCargando'>" + textoCargandoDatos + "</blink></span></div>";
-	else {
+		notificacion.notificar("info","<span class='cargando'><img src='" + imagenLoading + "' class='actualizandoDatos' /></img> <blink class='textoCargando'>" + textoCargandoDatos + "</blink></span>");
+	else
 		if(!infoRed.includes("<div class=\"actualizacion\""))
-			document.getElementsByClassName("infoMiRed")[0].innerHTML = "<div class='actualizacion' style='text-align: center;'><span class='cargando'><img src='" + imagenLoading + "' class='actualizandoDatos' /></img> <blink class='textoCargando'>" + textoActualizandoDatos + "</blink></span></div>" + document.getElementsByClassName("infoMiRed")[0].innerHTML;
-	}
-
+			notificacion.notificar("info","<span class='cargando'><img src='" + imagenLoading + "' class='actualizandoDatos' /></img> <blink class='textoCargando'>" + textoActualizandoDatos + "</blink></span>");
+	
 	document.getElementsByClassName("mired")[0].disabled = true;
 }
 
@@ -56,7 +55,7 @@ for (var id in layersMenu) {
 
 	// Creamos el elemento
 	var link = document.createElement('a');
-	link.href = document.URL + layersMenu[id].urlAjax;
+	link.href = document.URL + ((layersMenu[id].urlAjax) ? layersMenu[id].urlAjax : '#');
 	link.className = 'active ' + layersMenu[id].className;
 	link.id = layersMenu[id].urlAjax;
 	link.textContent = layersMenu[id].nombre;
@@ -86,34 +85,38 @@ for (var id in layersMenu) {
 			if(this.textContent == layer.nombre){
 				var archivo = getLayerAjaxUrl(this.textContent);
 				if(archivo != -1){
-					actualizarInfoRedPanel();
+					if(layer.abrirPanel)
+						actualizarInfoRedPanel();
 					
 					map.display = true;
 					$.ajax ({ 
 						url: archivo,
 						type: 'post',
-						data: {queboton : this.textContent},
 						success: function(r){
 							var lines = r.split('\n');
-							if(lines[0] == layer.nombre){
+							if(layer.abrirPanel) { // Mi red
 								map.setFlyingTo(this.textContent);
 								var conectados = [];
 								for(var i = 0;i < lines.length;i++){
 								    if(lines[i].includes("Nmap scan report for"))
 								    	conectados[conectados.length] = lines[i].split("Nmap scan report for ")[1];
 								}
-								if(conectados && conectados[0])
+								if(conectados && conectados[0] && layer.abrirPanel)
 									addInfoToPanel(conectados);
 								else
 									document.getElementsByClassName("actualizacion")[0].className += " invisible";
 								document.getElementsByClassName("mired")[0].disabled = false;
+							}
+							if(layer.abrirShell) { // Shell
+								shell.actualDir = lines[0];
+								shell.mostrarShell();
 							}
 						}
 					});
 				} else {
 					var noExisteUrlAjax = CONF.interfaz.panel.layersErrors.noExisteUrlAjax
 					var mirarConf = CONF.interfaz.panel.layersErrors.mirarConf;
-					console.log(noExisteUrlAjax + " '" + this.textContent + "' " + mirarConf);
+					notificacion.notificar("error", noExisteUrlAjax + " '" + this.textContent + "' " + mirarConf);
 				}
 			}
 		}

@@ -64,36 +64,52 @@ var CONF = {
 					}
 				}
 			},
+			"notificacion" : {
+				"delayMensaje" : 2500,
+				"velocidad" : {
+					"fadeIn" : "slow",
+					"fadeOut" : "slow"
+				}
+			},
 			"layers" : {
 				"mired" : {
 					"order" : 0,
 					"nombre" : "Mi Red",
 					"urlAjax" : "php/funciones/mired.php",
 					"onClickPersonalizado" : "flyToMe",
-					"className" : "mired"
+					"className" : "mired",
+					"abrirPanel" : true
+				},
+				"shell" : {
+					"order" : 1,
+					"nombre":  'Shell', 
+					"urlAjax" : "php/funciones/shell.php",
+					"onClickPersonalizado" : "mostrarShell",
+					"className" : "shell",
+					"abrirShell" : true
 				},
 				"wifigratis" : {
-					"order" : 1,
+					"order" : 2,
 					"nombre":  'WiFi Gratis', 
 					"urlAjax" : 'php/funciones/wifigratis.php'
 				},
 				"wpa" : {
-					"order" : 2,
+					"order" : 3,
 					"nombre" : 'WPA', 
 					"urlAjax" : 'php/funciones/wpa.php'
 				},
 				"dominiosvulns" : {
-					"order" : 3,
+					"order" : 4,
 					"nombre":  'Dominios Vulnerados', 
 					"urlAjax" : 'php/funciones/domvulns.php'
 				},
 				"ingsocial" : {
-					"order" : 4,
+					"order" : 5,
 					"nombre" : 'Ingenieria Social', 
 					"urlAjax" : 'php/funciones/ingsoci.php'
 				},
 				"perfiles" : {
-					"order" : 5,
+					"order" : 6,
 					"nombre" : 'Perfiles', 
 					"urlAjax" : 'php/funciones/perfiles.php'
 				}
