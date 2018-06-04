@@ -247,9 +247,29 @@ section:last-child {
 	clear: both;
 	width: 600px;
 	height: 350px;
+	max-height: 350px;
 	background: #1d3c2f;
 	color: #a0d283;
 	border-radius: 0px 0px 27px 27px;
+}
+#panelMiRed .infoMiRed ul{
+	height: 90%;
+	max-height: 100%;
+    	width: 20%;
+    	border: 3px solid #33634d;
+    	margin: 10px;
+    	position: relative;
+    	padding: 0px;
+    	padding-top: 10px;
+    	border-radius: 15px;
+    	text-align: center;
+}
+#panelMiRed .infoMiRed ul{
+	overflow:hidden; 
+	overflow-y:scroll;
+}
+#panelMiRed .infoMiRed ul li{
+	list-style-type: none;
 }
 #panelMiRedIp {
     	margin: 28%;

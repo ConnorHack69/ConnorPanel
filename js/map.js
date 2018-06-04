@@ -1,12 +1,14 @@
-var $cerrarPanel = $('#cerrarPanel');
-$cerrarPanel.on('click', function () {
-  	map.enableInteract();
-	document.getElementById("herramientas").classList.remove("herramientasFull");
-	document.getElementById("panelMiRed").style.display = "none";
-});
+// Boton de salir del panel
+var nombreMiUbicacion = CONF.mapa.miubicacion.name;
+
+// Devuelve el array de todos los markers
 map.getAllMarkers = function() {
 	return allMarkers;
 }
+
+/* Al abrir el panel, deshabilitamos el mapa. 
+   Con esto solucionamos el problema de poder jugar con el mapa por 
+   el margen inferior del panel, ya que el div no era 100% height */
 map.disableInteract = function() {
 	map["scrollZoom"].disable();
 	map["boxZoom"].disable();
@@ -16,6 +18,8 @@ map.disableInteract = function() {
 	map["doubleClickZoom"].disable();
 	map["touchZoomRotate"].disable();
 }
+
+// Habilita la interacción con el mapa
 map.enableInteract = function() {
 	map["scrollZoom"].enable();
 	map["boxZoom"].enable();
@@ -25,23 +29,22 @@ map.enableInteract = function() {
 	map["doubleClickZoom"].enable();
 	map["touchZoomRotate"].enable();
 }
+
+// Variable para controlar que se está volando y no abrir el panel al clicar en Mi Red
 map.setFlyingTo = function(flyTo){
 	map.flyingTo = flyTo;
 }
+
+// Variable para controlar que se está volando y no abrir el panel al clicar en Mi Red
 map.setFlyingToLonLat = function(lonLat) {
 	map.FlyingToLonLat = lonLat;
 }
-map.openPanel = function(){
-	actualLat = map.getCenter()["lat"];
-	actualLon = map.getCenter()["lng"];
-	//actualLat -= 0.0055;
-	// Mitad del circulo desde arriba : 242 px
-	// Diferencia entre punto anterior y el centro del panel
-	var actualLatPX = (300-242);
-	var point = map.project(map.getCenter());
-	point.y = actualLatPX;
-	var newTarget = map.unproject(point);
-	target = [actualLon,actualLat+(actualLat-newTarget.lat)/2];
+
+// Metodo llamado for map.flyToMe() para agregar el punto de Mi ubicación una vez se resuelva la IP y LonLat
+map.agregarMarcadorYvolar = function(target, ip){
+	map.addMarkerToSource('markers', target, nombreMiUbicacion, ip);
+	map.setFlyingTo(nombreMiUbicacion);
+	map.setFlyingToLonLat(target);
 	map.flyTo({
 		center: target,
 		zoom: 14,
@@ -52,23 +55,16 @@ map.openPanel = function(){
 		    return t;
 		}
 	});
-	map.display = true;
 }
-map.addInfoToPanel = function(info) {
-	document.getElementById("panelMiRedIp").innerHTML = interfaceType;
-	var html = "<ul>";
-	for(var i = 0; i < info.length; i++){
-		html += '<li><img src="images/equipo.png" alt="Equipo '+info[i]+'" class="imagenEquipo"/> <b>'+info[i]+'</b></li>'
-	}
-	html += '</ul>';
-	document.getElementsByClassName("infoMiRed")[0].innerHTML = html;
-	document.getElementById("panelMiRedInterfaz").innerHTML = interfaceName + "</br><span id='panelMiRedMiIP'>" + interfaceIP + "</span>";
-}
+
+// Vuela a la direccion actual del dispositivo con el que estamos en la web resolviendo IP y LonLat
 map.flyToMe = function() {
 	var target;
 	var ipTarget;
 	var lat;
 	var lon;
+
+	// Comprobamos si podemos coger la ubicación actual del propio navegador
 	if(!lonManual && !latManual && navigator.geolocation){
 		navigator.geolocation.getCurrentPosition(function(position) {
 		  	lat = position.coords.latitude;
@@ -79,29 +75,19 @@ map.flyToMe = function() {
 		lat = lonManual;
 		lon = latManual;
 	}
+
+	// Recuperamos la IP publica
 	$.ajax ({ 
-		url: 'php/getPublicIP.php',
+		url: CONF["plugins"].getPublicIP.urlAjax,
 		type: 'post'
 	}).done(function(ip) {
-		if(lon && lat) {
+		if(lon && lat) { // Si hemos podido obtener un Lon Lat o lo hemos leido por configuración
 			target = [lon,lat];
-			map.addMarkerToSource('markers', target, 'Mi ubicación', ip);
-			map.setFlyingTo('Mi ubicacion');
-			map.setFlyingToLonLat(target);
-			map.flyTo({
-				center: target,
-				zoom: 14,
-				bearing: 0,
-				speed: 1.6,
-				curve: 1.5,
-				easing: function (t) {
-				    return t;
-				}
-			});
+			map.agregarMarcadorYvolar(target, ip); // Agregamos el marcador y vamos hasta allí
 		} else {
-			if(ip){
+			if(ip){ // Si tenemos IP, pedimos el LonLat
 				$.ajax ({ 
-					url: 'php/getLonLatFromIP.php',
+					url: CONF["plugins"].getLonLatFromIP.urlAjax,
 					data: {ip: ipTarget},
 					type: 'post'
 				}).done(function(responseData) {
@@ -115,20 +101,8 @@ map.flyToMe = function() {
 						}
 					}
 					target = [lon,lat];
-					if(target){
-						map.addMarkerToSource('markers', target, 'Mi ubicación', ip);
-						map.setFlyingTo('Mi ubicacion');
-						map.setFlyingToLonLat(target);
-						map.flyTo({
-							center: target,
-							zoom: 14,
-							bearing: 0,
-							speed: 1.6,
-							curve: 1.5,
-							easing: function (t) {
-							    return t;
-							}
-						});
+					if(target){ // Si hemos obtenido LonLat, agregamos marcador y vamos hasta allí
+						map.agregarMarcadorYvolar(target, ip);
 					}
 				}).fail(function() {
 				});
@@ -138,6 +112,8 @@ map.flyToMe = function() {
 	}).complete(function(data) {
 	});
 }
+
+// Devuelve los features asociados a un crupo de features (por ejemplo 'markers')
 map.getSourceFeatures = function(source) {
 	return map.getSource(source)._options.data.features;
 }
@@ -196,7 +172,7 @@ map.addMarkerToSource = function(source, lonLat, titulo, ip) {
 	map.addLayer({
 		"id": source,
 		"source": source,
-		"className": "prueba",
+		"className": "markersClass",
 		"type": "circle",
 		"paint": {
 		    "circle-radius": 20,
@@ -204,6 +180,8 @@ map.addMarkerToSource = function(source, lonLat, titulo, ip) {
 		}
 	});
 }
+
+// Añadir capa con edificios 3D
 map.add3Dbuildings = function(){
 	if(!map.getLayer("3d-buildings")){
 		var layers = map.getStyle().layers;
@@ -225,17 +203,17 @@ map.add3Dbuildings = function(){
 			'paint': {
 			    'fill-extrusion-color': '#162e24',
 			    'fill-extrusion-height': [
-				"interpolate", ["linear"], ["zoom"],
-				15, 0,
-				15.05, ["get", "height"]
+					"interpolate", ["linear"], ["zoom"],
+					15, 0,
+					15.05, ["get", "height"]
 			    ],
 			    'fill-extrusion-base': [
-				"interpolate", ["linear"], ["zoom"],
-				15, 0,
-				15.05, ["get", "min_height"]
+					"interpolate", ["linear"], ["zoom"],
+					15, 0,
+					15.05, ["get", "min_height"]
 			    ],
 			    'fill-extrusion-opacity': .8
 			}
-		    }, labelLayerId);
+		}, labelLayerId);
 	}
 }
