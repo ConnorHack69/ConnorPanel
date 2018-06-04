@@ -56,6 +56,14 @@ var CONF = {
 					"imagenCargando" : "images/loading.gif"
 				}
 			},
+			"toolsType" : {
+				"reconocimiento" : {
+					"nombre" : "Reconocimiento",
+					"tools" : {
+						
+					}
+				}
+			},
 			"layers" : {
 				"mired" : {
 					"order" : 0,

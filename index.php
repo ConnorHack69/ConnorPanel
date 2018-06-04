@@ -14,6 +14,8 @@
 	<script src='https://api.mapbox.com/mapbox-gl-js/v0.44.2/mapbox-gl.js'></script>
 	<link href='https://api.mapbox.com/mapbox-gl-js/v0.44.2/mapbox-gl.css' rel='stylesheet' />
 
+  	<script src='http://codeorigin.jquery.com/jquery-1.10.2.min.js'></script>
+
 	<script src='https://api.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v1.0.0/leaflet.markercluster.js'></script>
 	<link href='https://api.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v1.0.0/MarkerCluster.css' rel='stylesheet' />
 	<link href='https://api.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v1.0.0/MarkerCluster.Default.css' rel='stylesheet' />
@@ -39,13 +41,19 @@
 				</div>
 				<div id="cargandoTexto"></div>
 				<div class="infoMiRed"></div>
+				<div id="tools"></div>
 			</div>
 			<div class="words"></div>
 		</div>
 		<div id='featuresSombreado'></div>
 		<div id='features'></div>
 	</div>
+	<!-- Primero importamos la configuración básica de la web -->
 	<script src='js/configuracion.js'></script>
+
+	<!-- Cargamos la configuración de todas las tools que queremos habilitar -->
+	<script src='js/toolsConfiguration/reconocimiento/reconng.js'></script>
+
 	<script src='js/map_config.js'></script>
 	<script src='js/map.js'></script>
 	<script src='js/voice.js'></script>
