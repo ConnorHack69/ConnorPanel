@@ -1,0 +1,3 @@
+use auxiliary/gather/search_email_collector
+set DOMAIN geograma.com
+run

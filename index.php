@@ -19,6 +19,22 @@
 	<script src='https://api.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v1.0.0/leaflet.markercluster.js'></script>
 	<link href='https://api.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v1.0.0/MarkerCluster.css' rel='stylesheet' />
 	<link href='https://api.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v1.0.0/MarkerCluster.Default.css' rel='stylesheet' />
+	
+	<script src="http://code.responsivevoice.org/responsivevoice.js"></script>
+	
+	<!--<script> window.intergramId = "323409446"
+	    window.intergramCustomizations = {
+	        titleClosed: 'Closed chat title',
+	        titleOpen: 'Opened chat title',
+	        introMessage: 'First message when the user opens the chat for the first time',
+	        autoResponse: 'A message that is sent immediately after the user sends its first message',
+	        autoNoResponse: 'A message that is sent one minute after the user sends its first message ' +
+	                        'and no response was received',
+	        mainColor: "#E91E63", // Can be any css supported color 'red', 'rgb(255,87,34)', etc
+	        alwaysUseFloatingButton: false // Use the mobile floating button also on large screens
+	    };
+    </script>
+	<script id="intergram" type="text/javascript" src="https://www.intergram.xyz/js/widget.js"></script>-->
 
 	<link href='css/style.css' rel='stylesheet' />
 	<link href="css/font-awesome.min.css" rel="stylesheet" />
@@ -30,6 +46,7 @@
 			<input type="text" name="buscador" id="buscador" size="1" spellcheck="false"  ondrop="dropHandler(event);" onkeyup="buscar()" onfocus="escuchar()" x-webkit-speech autofocus />
   			<audio src="" hidden class=speech></audio>
 			<nav id="menu"></nav>
+			<input type="button" onclick="telegram.enviarMensaje()" value="Enviar Telegram"/>
 			<div id="panelMiRed">
 				<div class="tituloMiRed">
 					<img src="images/minimizar.png" alt="Cerrar Panel" id="cerrarPanel"></img>
@@ -55,6 +72,7 @@
 	<!-- Cargamos la configuración de todas las tools que queremos habilitar -->
 	<script src='js/toolsConfiguration/reconocimiento/reconng.js'></script>
 	<script src='js/toolsConfiguration/shell.js'></script>
+	<script src='js/telegram.js'></script>
 
 	<script src='js/map_config.js'></script>
 	<script src='js/map.js'></script>

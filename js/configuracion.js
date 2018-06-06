@@ -64,6 +64,13 @@ var CONF = {
 					}
 				}
 			},
+			"redesSociales" : {
+				"telegram" : {
+					"apiKey" : "478556684:AAEVzefOWHm_r_cF28f3D811T40VJcv2-bo",
+					"urlAjax" : "php/funciones/telegram.php",
+					"chatID" : "@panelconnor"
+				}
+			},
 			"notificacion" : {
 				"delayMensaje" : 2500,
 				"velocidad" : {
