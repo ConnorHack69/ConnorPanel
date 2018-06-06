@@ -32,6 +32,7 @@ var CONF = {
 	"interfaz" : {
 		"panel" : {
 			"buscador" : {
+				"tiempoDeEsperaParaBuscar" : 500,
 				"expresiones" : {
 					"esDominio" : /^[a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9](?:\.[a-zA-Z]{2,})+$/,
 					"esIp" : /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/
@@ -61,6 +62,11 @@ var CONF = {
 					"nombre" : "Reconocimiento",
 					"tools" : {
 						
+					}
+				},
+				"metasploit" : {
+					"email_harvest" : {
+						"urlAjax" : "php/funciones/tools/metasploit/email_harvest.php"
 					}
 				}
 			},

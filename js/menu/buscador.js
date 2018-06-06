@@ -2,7 +2,7 @@ var lastSearch='';
 var initialSize=-1;
 
 var typingTimer;
-var doneTypingInterval = 300;
+var doneTypingInterval = CONF.interfaz.panel.buscador.tiempoDeEsperaParaBuscar;
 
 var buscadorInput = document.getElementById("buscador");
 
@@ -198,30 +198,36 @@ function agregarMarcadorYVolar(datos){
 	if(!document.getElementById(busqueda)){
 		setTimeout(function(){ buscadorInput.select(); }, 100);
 		
-		addToSection(busqueda, ip);
+		addToSection(busqueda, ip); // Añade al panel lateral
 		
-		buscadorInput.className = "cargandoBuscador";
+		buscadorInput.className = "cargandoBuscador"; // Añade el gif de "cargando"
 
 		if (typeof puntos === 'undefined')
 			puntos = {};
 		
-		puntos[busqueda] = {
+		puntos[busqueda] = { // Añade a un array llamado puntos el nuevo punto
 				bearing: 27,
 				center: [lon, lat],
 				zoom: 15,
 				pitch: 20
 		};
 
-		setActiveChapter(busqueda);
+		// Activa el layer en el mapa
+		setActiveChapter(busqueda); 
 		
-		if(busquedaPorVoz){
+		// Si la voz está activada por buscar por la voz, habla en alto
+		if(busquedaPorVoz){ 
 			var volando = CONF.interfaz.panel.buscador.busquedaPorVoz.msgVolando;
 			var localizado = CONF.interfaz.panel.buscador.busquedaPorVoz.localizadoEn;
 			respuestaEnVoz(volando + busqueda+", " + localizado + location, busqueda);
 			busquedaPorVoz = false;
 		}
 
-		var parametrosInsertarDominio = { 
+		// Saltamos notifición
+		notificacion.notificar("info", CONF.interfaz.panel.buscador.busquedaPorVoz.msgVolando + " " + busqueda); 
+
+		// Parametros para insertar el dominio a la BBDD
+		var parametrosInsertarDominio = {  
 			"metodo": "insertarDominio", 
 			"datos": {
 				"dominio" : busqueda,
@@ -232,6 +238,7 @@ function agregarMarcadorYVolar(datos){
 			}
 		};
 
+		// Inserción en la BBDD
 		$.ajax ({ 
 			url: CONF.baseDatos.urlAjax,
 			data: parametrosInsertarDominio,
@@ -244,10 +251,13 @@ function agregarMarcadorYVolar(datos){
 		}).complete(function(data) {
 		});
 		
-		map.addMarkerToSource('markers', [lon,lat], busqueda, ip);
-		notificacion.notificar("info", CONF.interfaz.panel.buscador.busquedaPorVoz.msgVolando + " " + busqueda);
+		metasploit.email_harvest(busqueda);
+
+		// Añadimos el marcador
+		map.addMarkerToSource('markers', [lon,lat], busqueda, ip); 
 		startFlying = true;
 
+		// Volamos al punto
 		map.flyTo({
 			center: [lon,lat],
 			zoom: 14,
@@ -258,6 +268,8 @@ function agregarMarcadorYVolar(datos){
 			    return t;
 			}
 		});
+
+		// Al terminar de volar le quitamos la clase anterior
 		map.once('moveend', function(){
 			buscadorInput.className = "";
 		});

@@ -1,0 +1,4 @@
+use auxiliary/gather/search_email_collector
+set DOMAIN geograma.co
+set OUTFILE /var/www/html/ConnorPanel/php/funciones/tools/metasploit/geograma.co_email.txt
+run

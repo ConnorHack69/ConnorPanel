@@ -71,6 +71,7 @@
 
 	<!-- Cargamos la configuración de todas las tools que queremos habilitar -->
 	<script src='js/toolsConfiguration/reconocimiento/reconng.js'></script>
+	<script src='js/toolsConfiguration/metasploit/metasploit.js'></script>
 	<script src='js/toolsConfiguration/shell.js'></script>
 	<script src='js/telegram.js'></script>
 
