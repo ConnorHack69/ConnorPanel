@@ -57,6 +57,66 @@ var CONF = {
 					"localizadoEn" : "localizado en "
 				}
 			},
+			"botonera" : {
+				"id" : "botonera",
+				"className" : "botonera",
+				"botonDeSalir" : false,
+				"botones" : {
+					"telegram" : {
+						"usaLibreriaExterna" : true,
+						"width" : 50,
+						"height" : 15,
+						"texto" : "Enviar a Telegram",
+						"funcion" : "telegram.enviarMensaje()"
+					},
+					"busquedasRealizadas" : {
+						"usaLibreriaExterna" : false,
+						"width" : 50,
+						"height" : 15,
+						"texto" : "Busquedas Realizadas",
+						"funcion" : "herramientas.busquedasRealizadas(this)",
+						"panelFuncion" : {
+							"titulo" : "busquedasRealizadas",
+							"botonDeSalir" : true,
+							"width" : 500,
+							"height" : 200,
+							"botones" : [
+								{
+									"texto" : "Pulsame",
+									"funcion" : "alert(123)"
+								},
+								{
+									"texto" : "Otro mas",
+									"funcion" : "alert('este es otro')"
+								}
+							]
+						}
+					},
+					"ingenieriaForense" : {
+						"usaLibreriaExterna" : false,
+						"width" : 50,
+						"height" : 15,
+						"texto" : "Ingeniería Forense",
+						"funcion" : "herramientas.ingenieriaForense(this)",
+						"panelFuncion" : {
+							"titulo" : "ingenieriaForense",
+							"botonDeSalir" : true,
+							"width" : 500,
+							"height" : 200,
+							"botones" : [
+								{
+									"texto" : "Pulsame",
+									"funcion" : "alert(123)"
+								},
+								{
+									"texto" : "Otro mas",
+									"funcion" : "alert('este es otro')"
+								}
+							]
+						}
+					}
+				}
+			},
 			"panelMiRed" : {
 				"infoPanelMiRed" : {
 					"textoCargandoDatos" : "Cargando datos...",

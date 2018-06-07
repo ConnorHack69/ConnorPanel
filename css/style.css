@@ -29,50 +29,50 @@ body {
 	top: 0 !important;
 	left: 0 !important;
 	background: #060606ad;
-    overflow: auto;
+	overflow: auto;
 }
 #menu {
-        position: absolute;
-        z-index: 1;
-        top: 10px;
-        right: 4%;
-    	float: right;
-        width: 120px;
-        font-family: 'Open Sans', sans-serif;
+    position: absolute;
+    z-index: 1;
+    top: 10px;
+    right: 4%;
+	float: right;
+    width: 120px;
+    font-family: 'Open Sans', sans-serif;
 	border-radius: 10px 20px;
-    	border: 3px solid #33634d;
-    	background: #1d3c2f;
-    	color: #a0d283;
+	border: 3px solid #33634d;
+	background: #1d3c2f;
+	color: #a0d283;
 }
 
 #menu a {
-        font-size: 13px;
-        color: #404040;
-        display: block;
-        margin: 0;
-        padding: 0;
-        padding: 10px;
-        text-decoration: none;
-        border-bottom: 1px solid rgba(0,0,0,0.25);
-        text-align: center;
+    font-size: 13px;
+    color: #404040;
+    display: block;
+    margin: 0;
+    padding: 0;
+    padding: 10px;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(0,0,0,0.25);
+    text-align: center;
 }
 
 #menu a:last-child {
-        border: none;
-    }
+    border: none;
+}
 
 #menu a:hover {
-        background-color: #f8f8f8;
-        color: #404040;
+    background-color: #f8f8f8;
+    color: #404040;
 }
 
 #menu a.active {
-        /*background-color: #3887be;*/
-        color: #ffffff;
+    /*background-color: #3887be;*/
+    color: #ffffff;
 }
 #menu a.active:hover {
-    	background: #3074a436;
-    	border-radius: 10px;
+	background: #3074a436;
+	border-radius: 10px;
 }
 .herramientasFull {
 	height: 100%;
@@ -88,69 +88,69 @@ button:focus {
 	z-index: 4;
 }
 #features, #featuresSombreado{
-    	position: absolute !important;
-    	top: 0 !important;
-    	right: 0 !important;
-    	height:auto;
-    	max-height:100%;
-    	overflow:auto;  
-    	float: right;
-    	width: 3%;
+	position: absolute !important;
+	top: 0 !important;
+	right: 0 !important;
+	height:auto;
+	max-height:100%;
+	overflow:auto;  
+	float: right;
+	width: 3%;
 	transition: all 0.3s ease-out; 
-    	font-family: sans-serif;
-    	overflow-y: none;
-    	background-color: #fafafa;
+	font-family: sans-serif;
+	overflow-y: none;
+	background-color: #fafafa;
 }
 #features:hover {
 	width: 12%;
 }
 #featuresSombreado {
 	pointer-events:none !important;
-    	height: 100%;
+	height: 100%;
 	/*background: linear-gradient(bottom, rgba(255,255,255,0), rgba(255,255,255,1), rgba(255,255,255,1)), url(http://foo.com/image.jpg);
 	background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,1), rgba(255,255,255,1)), url(http://foo.com/image.jpg);*/
 }
 section {
-    	padding:  25px 50px;
-    	line-height: 25px;
-    	border-bottom: 1px solid #ddd;
-    	opacity: 0.25;
-    	font-size: 13px;
-    	margin-right: 0px !important;
-    	height: inherit;
+	padding:  25px 50px;
+	line-height: 25px;
+	border-bottom: 1px solid #ddd;
+	opacity: 0.25;
+	font-size: 13px;
+	margin-right: 0px !important;
+	height: inherit;
 	transition: all 0.5s cubic-bezier(0.4, 0, 1, 1);
 }
 section.active {
-    	opacity: 1;
+	opacity: 1;
 }
 section:hover {
-    	opacity: 1;
+	opacity: 1;
 }
 section:last-child {
-    	border-bottom: none;
-    	margin-bottom: 800px;
+	border-bottom: none;
+	margin-bottom: 800px;
 }
 .fade {
-        opacity:0.5;
+    opacity:0.5;
 } .fade:hover
 {
-        opacity:1;
+    opacity:1;
 }
 .intermitente{
-  border: 1px solid black;
-  padding: 20px 20px;
-  box-shadow: 0px 0px 20px;
-  animation: infinite resplandorAnimation 2s;
+    border: 1px solid black;
+    padding: 20px 20px;
+    box-shadow: 0px 0px 20px;
+    animation: infinite resplandorAnimation 2s;
   
 }
 @keyframes resplandorAnimation {
-  0%,100%{
-    box-shadow: 0px 0px 20px;
-  }
-  50%{
-  box-shadow: 0px 0px 0px;
+    0%,100%{
+        box-shadow: 0px 0px 20px;
+    }
+    50%{
+        box-shadow: 0px 0px 0px;
   
-  }
+    }
 
 }
 /* INTERFAZ */
@@ -174,27 +174,27 @@ section:last-child {
   	background: #07e085;
 }
 .cargandoBuscador {
-    	background-image: url('../images/loading.gif') !important;
-    	background-repeat: no-repeat !important;
-    	background-position: right !important;
+	background-image: url('../images/loading.gif') !important;
+	background-repeat: no-repeat !important;
+	background-position: right !important;
 	background-size: 50px !important;
-    	background-position-x: 95% !important;
+	background-position-x: 95% !important;
 	padding: 15px 75px 15px 15px !important;
 }
 #miubicacion {
  	background-image: url('../images/database.png');
-    	background-size: cover;
-    	width: 50px;
-    	height: 50px;
-    	border-radius: 50%;
-    	cursor: pointer;
+	background-size: cover;
+	width: 50px;
+	height: 50px;
+	border-radius: 50%;
+	cursor: pointer;
 }
 .dominios {
  	background-image: url('../images/database.png');
-    	background-size: cover;
-    	width: 30px;
-    	height: 30px;
-    	cursor: pointer;
+	background-size: cover;
+	width: 30px;
+	height: 30px;
+	cursor: pointer;
 }
 #gifrandom {
 	position: absolute;
@@ -209,8 +209,8 @@ section:last-child {
 	background: transparent;
 	margin: auto;
 	/*margin-top: 60px;*/
-    	border-radius: 30px 30px;
-    	border: 3px solid #33634d;
+	border-radius: 30px 30px;
+	border: 3px solid #33634d;
 	display: none;
 }
 #panelMiRed .tituloMiRed {
@@ -256,14 +256,14 @@ section:last-child {
 #panelMiRed #infoMiRed ul{
 	height: 90%;
 	max-height: 100%;
-    	width: 20%;
-    	border: 3px solid #33634d;
-    	margin: 10px;
-    	position: relative;
-    	padding: 0px;
-    	padding-top: 10px;
-    	border-radius: 15px;
-    	text-align: center;
+	width: 20%;
+	border: 3px solid #33634d;
+	margin: 10px;
+	position: relative;
+	padding: 0px;
+	padding-top: 10px;
+	border-radius: 15px;
+	text-align: center;
 }
 #panelMiRed #infoMiRed ul{
 	overflow:hidden; 
@@ -273,14 +273,14 @@ section:last-child {
 	list-style-type: none;
 }
 #panelMiRedIp {
-    	margin: 28%;
-    	font-size: 28px;
+	margin: 28%;
+	font-size: 28px;
 }
 #panelMiRedMiIP {
 	margin : 32%;
 }
 #panelMiRedInterfaz {
-    	margin: 18%;
+	margin: 18%;
 	font-size: 20px;
 }
 .cargando {

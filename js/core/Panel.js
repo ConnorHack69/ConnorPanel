@@ -1,20 +1,26 @@
 class Panel {
 
-  constructor(id, height, width) {
+  constructor(id, width, height, className, botonDeSalir) {
     if(!document.getElementById(id + "_panel")){
       this.id = id;
       this.height = height;
       this.width = width;
+      this.className = className;
 
       // Boton de minimizar
-      var minimizar = $('<img src="'+CONF.core.panel.minimizar.imagen+'"></img>');
-      minimizar.attr('id', this.id+"_cerrarPanel");
-      minimizar.attr('class', "cerrarPanel");
-      minimizar.attr('alt', "Cerrar Panel");
+      if(botonDeSalir) {
+        var minimizar = $('<img src="'+CONF.core.panel.minimizar.imagen+'"></img>');
+        minimizar.attr('id', this.id+"_cerrarPanel");
+        minimizar.attr('class', "cerrarPanel");
+        minimizar.attr('alt', "Cerrar Panel");
+      }
 
       var divTitulo = $('<div></div>');
       divTitulo.attr('id', this.id+"_panelDivTitulo");
       divTitulo.attr('class', "corePanelDivTitulo");
+      if(!botonDeSalir){
+        divTitulo.attr('class', "sinBotonDeSalir");
+      }
 
       var divContenido = $('<div></div>');
       divContenido.attr('id', this.id+"_panelDivContenido");
@@ -23,9 +29,11 @@ class Panel {
       // Div completo del Panel
       var panelHtml = $('<div style="position: absolute;display:block;float:left;width:'+this.width+'px;height:'+this.height+'px;"></div>');
       panelHtml.attr('id', this.id+"_panel");
-      panelHtml.attr('class', "corePanel");
+      panelHtml.attr('class', "corePanel " + this.className);
 
-      panelHtml.append(minimizar);
+      if(botonDeSalir){
+        panelHtml.append(minimizar);
+      }
       panelHtml.append(divTitulo);
       panelHtml.append(divContenido);
 
@@ -37,10 +45,12 @@ class Panel {
       $("#" + id + "_panel").css("z-index", "2");
 
       // Funcion onClick de minimizar
-      $("#" + this.id+"_cerrarPanel").on('click', function () {
-        $("#herramientas").removeClass("herramientasFull");
-        $("#" + this.id.split("_")[0] + "_panel").hide();
-      });
+      if(botonDeSalir){
+        $("#" + this.id+"_cerrarPanel").on('click', function () {
+          $("#herramientas").removeClass("herramientasFull");
+          $("#" + this.id.split("_")[0] + "_panel").hide();
+        });
+      }
 
       // Funcion onClick en el Panel
       $("#" + this.id+"_panel").on('click', function () {
@@ -54,12 +64,18 @@ class Panel {
     }
   }
   
-  addTitulo(titulo){
-    $("#"+this.id + "_panelDivTitulo").append($('<span class="corePanelTitulo">'+titulo+'</span>').attr('id', this.id+'_corePanelTitulo'));
+  addTitulo(id, titulo){
+    var tit = titulo.replace(/\s/g,'');
+    if(document.getElementById(id +"_corePanelTitulo_" + tit) == null){
+      $("#"+ id + "_panelDivTitulo").append($('<span class="corePanelTitulo">'+titulo+'</span>').attr('id', id + '_corePanelTitulo_' + tit));
+    }
   }
 
-  addBoton(texto, funcion){
-    $("#"+this.id + "_panelDivContenido").append($('<button type="button" class="coreBoton" onclick="'+funcion+'"><span>'+texto+'</span></button>').attr('id', this.id+'coreBotonTabla'));
+  addBoton(id, texto, funcion){
+    var func = funcion.replace(/[()]/g, '');
+    if(document.getElementById(id + "_coreBoton_" + func) == null){
+      $("#"+ id + "_panelDivContenido").append($('<button type="button" class="coreBoton" onclick="'+funcion+'"><span>'+texto+'</span></button>').attr('id', id + '_coreBoton_' + func));
+    }
   }
 
   addTablaDatos(){

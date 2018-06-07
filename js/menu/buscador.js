@@ -1,5 +1,5 @@
 var lastSearch='';
-var initialSize=-1;
+var initialSizeInput=-1;
 
 var typingTimer;
 var doneTypingInterval = CONF.interfaz.panel.buscador.tiempoDeEsperaParaBuscar;
@@ -18,9 +18,7 @@ $("#buscador").on('change', actualizarTamañoBuscador());
 // Actializa la anchura del campo de texto
 function actualizarTamañoBuscador() {
   	clearTimeout(typingTimer);
-	if(initialSize == -1)
-		initialSize = buscadorInput.size;
-    buscadorInput.size = ( buscadorInput.val().length > initialSize ) ? buscadorInput.val().length : initialSize;
+    buscadorInput.attr('size',(buscadorInput.val() !== '')?buscadorInput.val().length:1);
   	typingTimer = setTimeout(buscar, doneTypingInterval);
 };
 

@@ -49,9 +49,7 @@
 			<input type="text" name="buscador" id="buscador" size="1" spellcheck="false"  ondrop="dropHandler(event);" onkeyup="buscar()" onfocus="escuchar()" x-webkit-speech autofocus />
   			<audio src="" hidden class=speech></audio>
 			<nav id="menu"></nav>
-			<input type="button" onclick="telegram.enviarMensaje()" value="Enviar Telegram"/>
-			<input type="button" onclick="herramientas.busquedasRealizadas()" value="Busquedas realizadas"/>
-			<input type="button" onclick="herramientas.ingenieriaForense()" value="Ingenieria Forense"/>
+			<div id="botonera"></div>
 			<div id="panelMiRed">
 				<div class="tituloMiRed">
 					<img src="images/minimizar.png" alt="Cerrar Panel" id="miRed_cerrarPanel" class="cerrarPanel"></img>
