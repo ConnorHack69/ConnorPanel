@@ -3,8 +3,8 @@ var layersMenu = CONF.interfaz.panel.layers;
 // Cierra el panel
 $('#cerrarPanel').on('click', function () {
   	map.enableInteract();
-	document.getElementById("herramientas").classList.remove("herramientasFull");
-	document.getElementById("panelMiRed").style.display = "none";
+	$("#herramientas").removeClass("herramientasFull");
+	$("#panelMiRed").hide();
 });
 
 // Devuelve un Layer segun el orden por configuracion
@@ -23,7 +23,7 @@ function getLayerByName(name){
 
 // Actualiza el contenido de infoRedPanel cuando se está actualizando al abrirse
 function actualizarInfoRedPanel(){
-	var infoRed = document.getElementsByClassName("infoMiRed")[0].innerHTML;
+	var infoRed = $("#infoMiRed").html();
 
 	var confPanel = CONF.interfaz.panel.panelMiRed.infoPanelMiRed;
 	var imagenLoading = confPanel.imagenCargando;
@@ -36,7 +36,7 @@ function actualizarInfoRedPanel(){
 		if(!infoRed.includes("<div class=\"actualizacion\""))
 			notificacion.notificar("info","<span class='cargando'><img src='" + imagenLoading + "' class='actualizandoDatos' /></img> <blink class='textoCargando'>" + textoActualizandoDatos + "</blink></span>");
 	
-	document.getElementsByClassName("mired")[0].disabled = true;
+	$("." + CONF.interfaz.panel["layers"].mired["className"]).prop('disabled', true);
 }
 
 // Devuelve el urlAjax del Layer con el nombre pasado como parametro
@@ -105,7 +105,7 @@ for (var id in layersMenu) {
 									addInfoToPanel(conectados);
 								else
 									document.getElementsByClassName("actualizacion")[0].className += " invisible";
-								document.getElementsByClassName("mired")[0].disabled = false;
+								$("." + CONF.interfaz.panel["layers"].mired["className"]).prop('disabled', false);
 							}
 							if(layer.abrirShell) { // Shell
 								shell.actualDir = lines[0];
@@ -122,6 +122,5 @@ for (var id in layersMenu) {
 		}
 	};
 
-	var layers = document.getElementById('menu');
-	layers.appendChild(link);	
+	$('#menu').append(link);	
 };

@@ -1,0 +1,5 @@
+use auxiliary/gather/search_email_collector
+set DOMAIN google.com
+set OUTFILE /var/www/html/ConnorPanel/php/funciones/tools/metasploit/google.com_email.txt
+run
+exit

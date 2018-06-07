@@ -8,8 +8,8 @@ var allMarkers = {};
 
 mapboxgl.accessToken = CONF.mapa.mapbox.apiKey;
 
-tempLat = (Math.random() * (-80 - 80) + 80).toFixed(4)
-tempLon = (Math.random() * (-80 - 80) + 80).toFixed(4)
+tempLat = (Math.random() * (-80 - 80) + 80).toFixed(4);
+tempLon = (Math.random() * (-80 - 80) + 80).toFixed(4);
 
 var start = [tempLat, tempLon];
 var end = [latManual, lonManual];
@@ -43,8 +43,7 @@ $.ajax ({
 // Al cargar el mapa: 
 map.on("load", function() {
 	map.on('moveend', function(){
-		var x = document.getElementById("buscador");
-		x.className = "";
+		$("#buscador").removeClass("cargandoBuscador");
 		// Este if else se ha creado para poder poner el panel de Mi Red a la distancia correcta y que se centre bien
 		if(!map.display && map.flyingTo && map.flyingTo != '' && map.FlyingToLonLat && map.FlyingToLonLat != ''){
 			var actualLat = map.getCenter()["lat"];
@@ -67,8 +66,8 @@ map.on("load", function() {
 				var flyingToLon = map.FlyingToLonLat[0];
 				if(!startFlying && !initialCentering && ((actualLat.toFixed(5)+0.0055) == (flyingToLat.toFixed(5)) || actualLon.toFixed(5) == flyingToLon.toFixed(5)))
 					openPanel();
-				document.getElementById("panelMiRed").style.display = "block";
-				document.getElementById("herramientas").className += " herramientasFull";
+				$("#panelMiRed").show();
+				$("#herramientas").addClass("herramientasFull");
 				map.display = null;
 				map.disableInteract();
 			}
@@ -90,7 +89,7 @@ map.on("load", function() {
 window.addEventListener("keydown",function (e) { // ctrl + f ==> Foco al input de busqueda
     if (e.keyCode === 114 || (e.ctrlKey && e.keyCode === 70)) { 
         e.preventDefault();
-	if(document.getElementById("buscador"))
-		document.getElementById("buscador").select();
+	if($("#buscador"))
+		$("#buscador").select();
     }
 })

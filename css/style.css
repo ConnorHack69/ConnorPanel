@@ -29,6 +29,7 @@ body {
 	top: 0 !important;
 	left: 0 !important;
 	background: #060606ad;
+    overflow: auto;
 }
 #menu {
         position: absolute;
@@ -159,12 +160,12 @@ section:last-child {
 #buscador {
 	background: #1d3c2f;
 	color: #a0d283;
-    	margin: 10px;
-    	height: 36px;
-    	border-radius: 10px 20px;
-    	border: 3px solid #33634d;
-    	padding: 15px;
-    	font-size: 24px;
+	margin: 10px;
+	height: 36px;
+	border-radius: 10px 20px;
+	border: 3px solid #33634d;
+	padding: 15px;
+	font-size: 24px;
    	font-family: monospace;
 	transition: all 0.5s ease;
 }
@@ -243,7 +244,7 @@ section:last-child {
 	background: radial-gradient(ellipse at center, rgba(255,50,54,0) 0%,rgba(249,47,50,0) 50%,rgba(51,99,77,1) 54%,rgba(29,60,47,1) 58%,rgba(29,60,47,1) 100%);
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ff3236', endColorstr='#1d3c2f',GradientType=1 );
 }
-#panelMiRed .infoMiRed {
+#panelMiRed #infoMiRed {
 	clear: both;
 	width: 600px;
 	height: 350px;
@@ -252,7 +253,7 @@ section:last-child {
 	color: #a0d283;
 	border-radius: 0px 0px 27px 27px;
 }
-#panelMiRed .infoMiRed ul{
+#panelMiRed #infoMiRed ul{
 	height: 90%;
 	max-height: 100%;
     	width: 20%;
@@ -264,11 +265,11 @@ section:last-child {
     	border-radius: 15px;
     	text-align: center;
 }
-#panelMiRed .infoMiRed ul{
+#panelMiRed #infoMiRed ul{
 	overflow:hidden; 
 	overflow-y:scroll;
 }
-#panelMiRed .infoMiRed ul li{
+#panelMiRed #infoMiRed ul li{
 	list-style-type: none;
 }
 #panelMiRedIp {
