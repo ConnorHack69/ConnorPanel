@@ -297,7 +297,7 @@ section:last-child {
 .imagenEquipo {
 	width: 50px;
 }
-#cerrarPanel{
+.cerrarPanel{
     background: #33634d;
     border-radius: 50%;
     width: 40px;

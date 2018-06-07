@@ -1,9 +1,11 @@
 var herramientas = {};
+herramientas.panelesActivos = [];
 
 herramientas.busquedasRealizadas = function(){
 	var panel = herramientas.crearPanel("busquedasRealizadas", 200, 500);
 	panel.addTitulo("Busquedas Realizadas");
 	panel.addBoton("PULSAME","alert(123)");
+	herramientas.panelesActivos["busquedasRealizadas"] = panel;
 };
 
 herramientas.ingenieriaForense = function(){

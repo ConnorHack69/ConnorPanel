@@ -1,7 +1,7 @@
 var layersMenu = CONF.interfaz.panel.layers;
 
 // Cierra el panel
-$('#cerrarPanel').on('click', function () {
+$('#miRed_cerrarPanel').on('click', function () {
   	map.enableInteract();
 	$("#herramientas").removeClass("herramientasFull");
 	$("#panelMiRed").hide();

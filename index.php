@@ -54,7 +54,7 @@
 			<input type="button" onclick="herramientas.ingenieriaForense()" value="Ingenieria Forense"/>
 			<div id="panelMiRed">
 				<div class="tituloMiRed">
-					<img src="images/minimizar.png" alt="Cerrar Panel" id="cerrarPanel"></img>
+					<img src="images/minimizar.png" alt="Cerrar Panel" id="miRed_cerrarPanel" class="cerrarPanel"></img>
 				</div>
 				<div class="panelMiRedMarker">
 					<div class="huecoVacio"><span id="panelMiRedIp"></span></div>
