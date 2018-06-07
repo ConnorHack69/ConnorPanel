@@ -6,7 +6,7 @@ var chatID = CONF.interfaz.panel.redesSociales.telegram.chatID;
 telegram.enviarMensaje = function(){
 	$.ajax ({ 
 		url: CONF.interfaz.panel.redesSociales.telegram.urlAjax,
-		data: { apiKey : token , chatID : chatID, mensaje : document.getElementById("buscador").value },
+		data: { apiKey : token , chatID : chatID, mensaje : $("#buscador").value },
 		type: 'post',
 		datatype: "json"
 	}).done(function(responseData) {

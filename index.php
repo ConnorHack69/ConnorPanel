@@ -14,7 +14,9 @@
 	<script src='https://api.mapbox.com/mapbox-gl-js/v0.44.2/mapbox-gl.js'></script>
 	<link href='https://api.mapbox.com/mapbox-gl-js/v0.44.2/mapbox-gl.css' rel='stylesheet' />
 
-  	<script src='http://codeorigin.jquery.com/jquery-1.10.2.min.js'></script>
+  	
+  	<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
 	<script src='https://api.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v1.0.0/leaflet.markercluster.js'></script>
 	<link href='https://api.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v1.0.0/MarkerCluster.css' rel='stylesheet' />
@@ -37,6 +39,7 @@
 	<script id="intergram" type="text/javascript" src="https://www.intergram.xyz/js/widget.js"></script>-->
 
 	<link href='css/style.css' rel='stylesheet' />
+	<link href='css/core.css' rel='stylesheet' />
 	<link href="css/font-awesome.min.css" rel="stylesheet" />
 </head>
 <body>
@@ -47,6 +50,8 @@
   			<audio src="" hidden class=speech></audio>
 			<nav id="menu"></nav>
 			<input type="button" onclick="telegram.enviarMensaje()" value="Enviar Telegram"/>
+			<input type="button" onclick="herramientas.busquedasRealizadas()" value="Busquedas realizadas"/>
+			<input type="button" onclick="herramientas.ingenieriaForense()" value="Ingenieria Forense"/>
 			<div id="panelMiRed">
 				<div class="tituloMiRed">
 					<img src="images/minimizar.png" alt="Cerrar Panel" id="cerrarPanel"></img>
@@ -57,7 +62,7 @@
 					<div class="huecoVacio"><span id="panelMiRedInterfaz"></span></div>
 				</div>
 				<div id="cargandoTexto"></div>
-				<div class="infoMiRed"></div>
+				<div id="infoMiRed"></div>
 				<div id="tools"></div>
 			</div>
 			<div id="divShell" class="shell-wrap resizable" draggable="true"></div>
@@ -69,7 +74,11 @@
 	<!-- Primero importamos la configuración básica de la web -->
 	<script src='js/configuracion.js'></script>
 
+	<!-- El core va a llevar todas las clases para instanciar de forma sencilla Paneles, botones, etc. -->
+	<script src='js/core/Panel.js'></script>
+
 	<!-- Cargamos la configuración de todas las tools que queremos habilitar -->
+	<script src='js/toolsConfiguration/herramientas/herramientas.js'></script>
 	<script src='js/toolsConfiguration/reconocimiento/reconng.js'></script>
 	<script src='js/toolsConfiguration/metasploit/metasploit.js'></script>
 	<script src='js/toolsConfiguration/shell.js'></script>
@@ -78,7 +87,6 @@
 	<script src='js/map_config.js'></script>
 	<script src='js/map.js'></script>
 	<script src='js/voice.js'></script>
-	<!--<script src='js/musica.js'></script>  Aqui se cargará la funcion de js/musica.js -->
 	<script src='js/notificacion.js'></script>
 	<script src='js/draganddrop.js'></script>
 	<script src='js/menu/buscador.js'></script>

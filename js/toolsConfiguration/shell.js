@@ -9,21 +9,21 @@ shell.mostrarShell = function () {
   	html += '<li>' + shell.actualDir + '</li>';
   	html += '</ul>';
   	html += '<input type="text" name="shell" id="shell" onenter="shell.buscar()"/>';
-  	document.getElementById("divShell").innerHTML = html;
+  	$("#divShell").innerHTML = html;
   	// 	 shell.addListenerEnterKeyPress(document.getElementById("shell"));
 }
 
 shell.ocultarShell = function () {
-	document.getElementById("divShell").innerHTML = '';
+	$("#divShell").innerHTML = '';
 }
 
 shell.buscar = function(){
-	var valorCampo = document.getElementById("shell").value();
+	var valorCampo = $("#shell").value();
 
 	var node = document.createElement("li");                 // Create a <li> node
 	var textnode = document.createTextNode(valorCampo);         // Create a text node
 	node.appendChild(textnode);                              // Append the text to <li>
-	document.getElementById("shellLista").appendChild(node);
+	$("#shellLista").appendChild(node);
 }
 shell.addListenerEnterKeyPress = function(element) {
 	element.addEventListener("keyup", function(event) {

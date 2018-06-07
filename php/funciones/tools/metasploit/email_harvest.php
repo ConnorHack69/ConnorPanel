@@ -15,8 +15,16 @@
 	$txt = "run\n";
 	fwrite($myfile, $txt);
 
+	$txt = "exit\n";
+	fwrite($myfile, $txt);
 	fclose($myfile);
 
-	$response = shell_exec("nohup msfconsole -r /var/www/html/ConnorPanel/php/funciones/tools/metasploit/email_harvest.rc 2>&1 &");
-	echo $response;
+	$myfile = fopen("email_harvest.sh", "w") or die("Unable to open file!");
+
+	$txt = "/usr/share/metasploit-framework/./msfconsole -r /var/www/html/ConnorPanel/php/funciones/tools/metasploit/email_harvest.rc &\n";
+	fwrite($myfile, $txt);
+	fclose($myfile);
+
+	exec("/var/www/html/ConnorPanel/php/funciones/tools/metasploit/./email_harvest.sh"); // Probar esto sin guardar en variable
+
 ?>

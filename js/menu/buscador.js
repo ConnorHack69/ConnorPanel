@@ -4,7 +4,7 @@ var initialSize=-1;
 var typingTimer;
 var doneTypingInterval = CONF.interfaz.panel.buscador.tiempoDeEsperaParaBuscar;
 
-var buscadorInput = document.getElementById("buscador");
+var buscadorInput = $("#buscador");
 
 var startFlying = false;
 var busquedaPorVoz = false;
@@ -13,22 +13,22 @@ var expEsDominio = CONF.interfaz.panel.buscador.expresiones.esDominio;
 var expEsIp = CONF.interfaz.panel.buscador.expresiones.esIp;
 
 // Cambia la anchura del campo de busqueda cada vez que se cambia su contenido
-$("#buscadorInput").on('change', actualizarTamañoBuscador());
+$("#buscador").on('change', actualizarTamañoBuscador());
 
 // Actializa la anchura del campo de texto
 function actualizarTamañoBuscador() {
   	clearTimeout(typingTimer);
 	if(initialSize == -1)
 		initialSize = buscadorInput.size;
-       	buscadorInput.size = ( buscadorInput.value.length > initialSize ) ? buscadorInput.value.length : initialSize;
+    buscadorInput.size = ( buscadorInput.val().length > initialSize ) ? buscadorInput.val().length : initialSize;
   	typingTimer = setTimeout(buscar, doneTypingInterval);
 };
 
 // Busca el dominio de una IP
 function buscarDominio(busqueda){
 	if(busqueda !== lastSearch){
-		buscadorInput.className = "cargandoBuscador";
-		buscadorInput.readOnly = true;
+		buscadorInput.addClass("cargandoBuscador");
+		buscadorInput.attr('readonly', true);
 		lastSearch = busqueda;
 	}
 	$.ajax ({ 
@@ -38,7 +38,7 @@ function buscarDominio(busqueda){
 	}).done(function(responseData) {
 		var ip = nslookupToIP(responseData);
 		var datos = getLonLatFromIP(ip, busqueda);
-		buscadorInput.readOnly = false;
+		buscadorInput.attr('readonly', false);
 	}).fail(function(fail) {
 	    notificacion.notificar("error", CONF.interfaz.panel.buscador.buscarDominioIP.errorAjax);
 	}).complete(function(data) {
@@ -48,8 +48,8 @@ function buscarDominio(busqueda){
 // Busca la IP de un dominio
 function buscarIP(busqueda){
 	if(busqueda !== lastSearch){
-		buscadorInput.className = "cargandoBuscador";
-		buscadorInput.readOnly = true;
+		buscadorInput.addClass("cargandoBuscador");
+		buscadorInput.attr('readonly', true);
 		lastSearch = busqueda;
 	}
 	$.ajax ({ 
@@ -59,7 +59,7 @@ function buscarIP(busqueda){
 	}).done(function(responseData) {
 		var dominio = nslookupToDomain(responseData);
 		var datos = getLonLatFromIP(busqueda, dominio);
-		buscadorInput.readOnly = false;
+		buscadorInput.attr('readonly', false);
 	}).fail(function(fail) {
 	    notificacion.notificar("error", CONF.interfaz.panel.buscador.buscarDominioIP.errorAjax);
 	}).complete(function(data) {
@@ -69,8 +69,8 @@ function buscarIP(busqueda){
 // Función principal de búsqueda. Aquí se irán añadiendo nuevas funciones al buscador
 function buscar() {
 	clearTimeout(typingTimer);
-    	buscadorInput.value = buscadorInput.value.toLowerCase();
-	var busqueda = buscadorInput.value;
+    buscadorInput.val(buscadorInput.val().toLowerCase());
+	var busqueda = buscadorInput.val();
 	actualizarTamañoBuscador();
 	
 	if(busqueda.length > 3){
@@ -91,14 +91,18 @@ function buscar() {
 // Returns IP (Llamado desde buscarDominio())
 function nslookupToIP(responseData){
 	var lines = responseData.split('\n');
-	for(var i = 0;i < lines.length;i++){
+	var onError = "";
+	for(var i = 2; i < lines.length;i++){
 	    	if(lines[i].includes("Address")){
-			var ip = lines[i].split("\t")[lines[i].split("\t").length-1].split(" ")[1];
-			if (expEsIp.test(ip)){  
-				return ip;
+				var ip = lines[i].split("\t")[lines[i].split("\t").length-1].split(" ")[1];
+				if (expEsIp.test(ip)){  
+					return ip;
+				}
+			} else if (lines[i].includes("server can't find")) {
+				onError = lines[i].split(":")[1].trim();
 			}
 		}
-	}
+	return onError;
 }
 
 // Returns Domain (Llamado desde buscarIP())
@@ -106,7 +110,7 @@ function nslookupToDomain(responseData){
 	var lines = responseData.split('\n');
 	var onError = "";
 	for(var i = 0;i < lines.length;i++){
-	    	if(lines[i].includes("name = ")){
+	    if(lines[i].includes("name = ")){
 			return lines[i].split("name = ")[lines[i].split("name = ").length-1];
 		} else if (lines[i].includes("server can't find")) {
 			onError = lines[i].split(":")[1].trim();
@@ -176,8 +180,8 @@ function openPanel(){
 
 // Añade información devuelta al entrar en el panel (escaneo)
 function addInfoToPanel(info) {
-	document.getElementById("panelMiRedIp").innerHTML = interfaceType; // IP
-	document.getElementById("panelMiRedInterfaz").innerHTML = interfaceName + "</br><span id='panelMiRedMiIP'>" + interfaceIP + "</span>"; // Interfaz (ex: wlan0)
+	$("#panelMiRedIp").html(interfaceType); // IP
+	$("#panelMiRedInterfaz").html(interfaceName + "</br><span id='panelMiRedMiIP'>" + interfaceIP + "</span>"); // Interfaz (ex: wlan0)
 
 	// Lista con los dispositivos en la red
 	var html = "<ul>";
@@ -186,21 +190,33 @@ function addInfoToPanel(info) {
 	}
 	html += '</ul>';
 
-	document.getElementsByClassName("infoMiRed")[0].innerHTML = html;
+	$("#infoMiRed").html(html);
 }
 
+/*
+	Agrega un marcador en el mapa y vuela a el
+
+	Parametro: 	datos
+	Formato: 	{
+					"busqueda" : "dominio.com",
+					"ip" : "0.0.0.0",
+					"lon" : "42.5",
+					"lat" : "-2.4",
+					"location" : "ES"
+				}
+*/
 function agregarMarcadorYVolar(datos){
 	var busqueda = datos.busqueda;
 	var ip = datos.ip;
 	var lon = datos.lon;
 	var lat = datos.lat;
 	var location = datos["location"];
-	if(!document.getElementById(busqueda)){
+	if(!$("#" + busqueda)){
 		setTimeout(function(){ buscadorInput.select(); }, 100);
 		
 		addToSection(busqueda, ip); // Añade al panel lateral
 		
-		buscadorInput.className = "cargandoBuscador"; // Añade el gif de "cargando"
+		buscadorInput.addClass("cargandoBuscador"); // Añade el gif de "cargando"
 
 		if (typeof puntos === 'undefined')
 			puntos = {};
@@ -278,39 +294,41 @@ function agregarMarcadorYVolar(datos){
 
 // Pasamos el dominio y la ip para resolver el LonLat y acto seguido, volamos alli
 function getLonLatFromIP(ip,busqueda){
-	$.ajax ({ 
-		url: CONF.interfaz.panel.buscador.getLonLatFromIP.urlAjax,
-		data: {ip: ip},
-		type: 'post',
-		success : function (responseData) {
-			var datos = responseData.split(",");
-			var lat = 0;
-			var lon = 0;
-			var location = 0;
-			for(var i = 0;i < datos.length;i++){
-				if(datos[i].includes("latitude")){
-					lat = datos[i].split(":")[1];
+	if(expEsIp.test(ip)){
+		$.ajax ({ 
+			url: CONF.interfaz.panel.buscador.getLonLatFromIP.urlAjax,
+			data: {ip: ip},
+			type: 'post',
+			success : function (responseData) {
+				var datos = responseData.split(",");
+				var lat = 0;
+				var lon = 0;
+				var location = 0;
+				for(var i = 0;i < datos.length;i++){
+					if(datos[i].includes("latitude")){
+						lat = datos[i].split(":")[1];
+					}
+					if(datos[i].includes("longitude")){
+						lon = datos[i].split(":")[1];
+					}
+					if(datos[i].includes("country_code")){
+						location = (datos[i].split(":")[1]).replace(/['"]+/g, '');
+					}
 				}
-				if(datos[i].includes("longitude")){
-					lon = datos[i].split(":")[1];
+				var resp = {
+					"busqueda" : busqueda,
+					"ip" : ip,
+					"lon" : lon,
+					"lat" : lat,
+					"location" : location
 				}
-				if(datos[i].includes("country_code")){
-					location = (datos[i].split(":")[1]).replace(/['"]+/g, '');
-				}
+				agregarMarcadorYVolar(resp);
 			}
-			var resp = {
-				"busqueda" : busqueda,
-				"ip" : ip,
-				"lon" : lon,
-				"lat" : lat,
-				"location" : location
-			}
-			agregarMarcadorYVolar(resp);
-		}
-	}).done(function(responseData) {
-	}).fail(function() {
-	   	notificacion.notificar("error", CONF.interfaz.panel.buscador.getLonLatFromIP.errorAjax);
-	});
+		}).done(function(responseData) {
+		}).fail(function() {
+		   	notificacion.notificar("error", CONF.interfaz.panel.buscador.getLonLatFromIP.errorAjax);
+		});
+	}
 }
 
 $(document).keydown(function (e) {
