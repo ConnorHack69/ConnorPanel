@@ -209,7 +209,7 @@ function agregarMarcadorYVolar(datos){
 	var lon = datos.lon;
 	var lat = datos.lat;
 	var location = datos["location"];
-	if(!$("#" + busqueda)){
+	if(!document.getElementById(busqueda)){
 		setTimeout(function(){ buscadorInput.select(); }, 100);
 		
 		addToSection(busqueda, ip); // Añade al panel lateral

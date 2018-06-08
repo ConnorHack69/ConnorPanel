@@ -24,19 +24,25 @@
 	
 	<script src="http://code.responsivevoice.org/responsivevoice.js"></script>
 	
-	<!--<script> window.intergramId = "323409446"
+	<script> window.intergramId = "323409446"
 	    window.intergramCustomizations = {
-	        titleClosed: 'Closed chat title',
-	        titleOpen: 'Opened chat title',
-	        introMessage: 'First message when the user opens the chat for the first time',
-	        autoResponse: 'A message that is sent immediately after the user sends its first message',
-	        autoNoResponse: 'A message that is sent one minute after the user sends its first message ' +
-	                        'and no response was received',
-	        mainColor: "#E91E63", // Can be any css supported color 'red', 'rgb(255,87,34)', etc
+	        titleClosed: 'Support',
+	        titleOpen: 'Support Chat',
+	        introMessage: 'Hi! If you have any issue or any doubt, you can tell us by this chat',
+	        autoResponse: 'If any support agent is online at Telegram, you would have any answer in some minutes',
+	        autoNoResponse: 'There is no any agent right now, but would response when read your question. Be online for wait your response or try at other moment',
+	        mainColor: "#1d3c2f", // Can be any css supported color 'red', 'rgb(255,87,34)', etc
 	        alwaysUseFloatingButton: false // Use the mobile floating button also on large screens
 	    };
     </script>
-	<script id="intergram" type="text/javascript" src="https://www.intergram.xyz/js/widget.js"></script>-->
+	<script id="intergram" type="text/javascript" src="https://www.intergram.xyz/js/widget.js"></script>
+
+	<script src='js/togeojson.js'></script>
+	<script>
+		$.ajax('kml/CCTV.kml').done(function(xml) {
+		    console.log(toGeoJSON.kml(xml));
+		});
+	</script>
 
 	<link href='css/style.css' rel='stylesheet' />
 	<link href='css/core.css' rel='stylesheet' />

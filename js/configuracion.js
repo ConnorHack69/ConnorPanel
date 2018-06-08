@@ -61,7 +61,7 @@ var CONF = {
 				"id" : "botonera",
 				"className" : "botonera",
 				"botonDeSalir" : false,
-				"botones" : {
+				"botones" : { // No se pueden poder mas de un boton con la misma funcion ya que se usa para parte de ls identificadores del html que genera
 					"telegram" : {
 						"usaLibreriaExterna" : true,
 						"width" : 50,
@@ -74,7 +74,7 @@ var CONF = {
 						"width" : 50,
 						"height" : 15,
 						"texto" : "Busquedas Realizadas",
-						"funcion" : "herramientas.busquedasRealizadas(this)",
+						"funcion" : "herramientas.busquedasRealizadas(this)", // Hay que pasar this para coger el boton con el que se ha llamado a la funcion
 						"panelFuncion" : {
 							"titulo" : "busquedasRealizadas",
 							"botonDeSalir" : true,
@@ -97,7 +97,7 @@ var CONF = {
 						"width" : 50,
 						"height" : 15,
 						"texto" : "Ingeniería Forense",
-						"funcion" : "herramientas.ingenieriaForense(this)",
+						"funcion" : "herramientas.ingenieriaForense(this)", // Hay que pasar this para coger el boton con el que se ha llamado a la funcion
 						"panelFuncion" : {
 							"titulo" : "ingenieriaForense",
 							"botonDeSalir" : true,

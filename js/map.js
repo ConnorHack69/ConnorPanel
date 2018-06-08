@@ -181,6 +181,20 @@ map.addMarkerToSource = function(source, lonLat, titulo, ip) {
 	});
 }
 
+map.addKMLFiles = function(){
+	const testFolder = '../kml/';
+	$.ajax ({ 
+		url: 'php/getKMLFileList.php',
+		data: {kml: testFolder},
+		type: 'post',
+        success: function( data ) { 
+        	var archivos = data.replace("[", "").replace("]", "").split(",");
+        	for(var i = 2; i < archivos.length; i++)
+				console.log(archivos[i]);
+        }
+	});
+}
+
 // Añadir capa con edificios 3D
 map.add3Dbuildings = function(){
 	if(!map.getLayer("3d-buildings")){

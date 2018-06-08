@@ -83,6 +83,7 @@ map.on("load", function() {
     	map.getCanvas().style.cursor = '';
 	});
 	map.add3Dbuildings();
+	map.addKMLFiles();
 	map.flyToMe();
 });
 
