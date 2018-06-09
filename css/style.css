@@ -15,6 +15,20 @@ body {
 .bloqueado {
 	
 }
+.usuario {
+	z-index: 1;
+    position: absolute;
+    bottom: 0px;
+    background: #1d3c2f;
+    margin: 10px;
+    padding: 2px 15px;
+    border: 1px solid #33614c;
+    border-radius: 15px;
+    text-align: center;
+}
+.usuarioMsg {
+	color: #359449;
+}
 #map { 
 	position:absolute !important; 
 	top:0 !important; 
@@ -422,3 +436,7 @@ section:last-child {
   	cursor: pointer;
   	opacity: 80%;
 }
+.cerrarSesion:link    { color: #359449; text-decoration: none; }
+.cerrarSesion:visited { color: #359449; text-decoration: none; }
+.cerrarSesion:hover   { color: #359449; text-decoration: none; }
+.cerrarSesion:active  { color: #359449; text-decoration: none; }

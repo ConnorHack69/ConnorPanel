@@ -12,7 +12,12 @@ telegram.enviarMensaje = function(){
 	}).done(function(responseData) {
 		console.log(responseData)
 	}).fail(function(fail) {
-	    notificacion.notificar("error", fail);
+	    notificacion.notificar(
+	    	"error", 
+	    	"Telegram", 
+	    	fail, 
+	    	"No se ha podido enviar el mensaje"
+	    );
 	}).complete(function(data) {
 	});
 }

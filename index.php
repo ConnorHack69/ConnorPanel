@@ -1,3 +1,16 @@
+<?php 
+  session_start(); 
+
+  if (!isset($_SESSION['username'])) {
+  	$_SESSION['msg'] = "You must log in first";
+  	header('location: registration/login.php');
+  }
+  if (isset($_GET['logout'])) {
+  	session_destroy();
+  	unset($_SESSION['username']);
+  	header("location: registration/login.php");
+  }
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -47,6 +60,10 @@
 	<div id='map'></div>
 	<div id='interfaz'>
 		<div id="herramientas">
+			<div class="usuario">
+				<p class="usuarioMsg">Welcome <strong><?php echo $_SESSION['username']; ?></strong></p>
+				<p><a class="cerrarSesion" href="index.php?logout='1'">Cerrar Sesión</a></span>
+			</div>
 			<input type="text" name="buscador" id="buscador" size="1" spellcheck="false"  ondrop="dropHandler(event);" onkeyup="buscar()" onfocus="escuchar()" x-webkit-speech autofocus />
   			<audio src="" hidden class=speech></audio>
 			<nav id="menu"></nav>
@@ -73,13 +90,16 @@
 	<!-- Primero importamos la configuración básica de la web -->
 	<script src='js/configuracion.js'></script>
 
+	<!-- Ajax call and notification -->
+	<script src='js/db/database.js'></script>
+
 	<!-- El core va a llevar todas las clases para instanciar de forma sencilla Paneles, botones, etc. -->
 	<script src='js/core/Panel.js'></script>
 
 	<!-- Cargamos la configuración de todas las tools que queremos habilitar -->
 	<script src='js/toolsConfiguration/herramientas/herramientas.js'></script>
 	<script src='js/toolsConfiguration/reconocimiento/reconng.js'></script>
-	<script src='js/toolsConfiguration/metasploit/metasploit.js'></script>
+	<!--<script src='js/toolsConfiguration/metasploit/metasploit.js'></script>-->
 	<script src='js/toolsConfiguration/shell.js'></script>
 	<script src='js/telegram.js'></script>
 

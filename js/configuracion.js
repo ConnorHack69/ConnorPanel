@@ -1,6 +1,16 @@
 var CONF = {
 	"baseDatos" : {
-		"urlAjax" : "php/db/conection.php"
+		"urlAjax" : "php/db/databaseFunctions.php",
+		"urlAjaxErrorMsg" : "No existe el metodo",
+		"urlAjaxDesc" : "No está difindo el método en 'CONF.baseDatos.methods'",
+		"msgNoConn" : "No se ha podido conectar con la BBDD",
+		"msgErrorSql" : "Error en la sentenica SQL",
+		"msgErrorSwitch" : "Se está devolviendo",
+		"msgInsertOK" : "Se ha añadido correctamente a la BBDD",
+		"methods" : [
+			"insertarDominio",
+			"getDominios"
+		]
 	},
 	"core" : {
 		"panel" : {
@@ -46,15 +56,17 @@ var CONF = {
 				},
 				"buscarDominioIP" : {
 					"urlAjax" : "php/buscarDominio.php",
-					"errorAjax" : "Fallo encontrando Dominio!"
+					"errorAjax" : "Fallo encontrando Dominio!",
+					"errorAjaxDesc" : "No se ha podido encontrar el Dominio de la IP indicada."
 				},
 				"getLonLatFromIP" : {
 					"urlAjax" : "php/getLonLatFromIP.php",
-					"errorAjax" : "Fallo encontrando LonLat!"
+					"errorAjax" : "Fallo encontrando LonLat!",
+					"errorAjaxDesc" : "No se ha podido encontrar el LonLat de la busqueda."
 				},
 				"busquedaPorVoz" : {
-					"msgVolando" : "Volando a ",
-					"localizadoEn" : "localizado en "
+					"msgVolando" : "Volando a",
+					"localizadoEn" : "localizado en"
 				}
 			},
 			"botonera" : {
@@ -149,6 +161,32 @@ var CONF = {
 				"velocidad" : {
 					"fadeIn" : "slow",
 					"fadeOut" : "slow"
+				},
+				"console" : {
+					"whatMakesError" : {
+						"color": "#ce1e00",
+						"fontSize":"15px",
+						"background": "orange",
+						"padding": "5px 0px 5px 5px;"
+					},
+					"descripcionError" : {
+						"color": "#0f308c",
+						"fontSize":"15px",
+						"background": "orange",
+						"padding": "5px 5px 5px 10px"
+					},
+					"whatMakesInfo" : {
+						"color": "yellow",
+						"fontSize":"12px",
+						"background": "#1c4f1c",
+						"padding": "5px 0px 5px 5px;"
+					},
+					"descripcionInfo" : {
+						"color": "white",
+						"fontSize":"12px",
+						"background": "#1c4f1c",
+						"padding": "5px 5px 5px 10px"
+					}
 				}
 			},
 			"layers" : {

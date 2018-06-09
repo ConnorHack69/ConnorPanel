@@ -38,7 +38,12 @@ function buscarDominio(busqueda){
 		var datos = getLonLatFromIP(ip, busqueda);
 		buscadorInput.attr('readonly', false);
 	}).fail(function(fail) {
-	    notificacion.notificar("error", CONF.interfaz.panel.buscador.buscarDominioIP.errorAjax);
+	    notificacion.notificar(
+	    	"error", 
+	    	"buscarDominio", 
+	    	CONF.interfaz.panel.buscador.buscarDominioIP.errorAjax, 
+	    	CONF.interfaz.panel.buscador.buscarDominioIP.errorAjaxDesc
+	    );
 	}).complete(function(data) {
 	});
 }
@@ -59,7 +64,12 @@ function buscarIP(busqueda){
 		var datos = getLonLatFromIP(busqueda, dominio);
 		buscadorInput.attr('readonly', false);
 	}).fail(function(fail) {
-	    notificacion.notificar("error", CONF.interfaz.panel.buscador.buscarDominioIP.errorAjax);
+	    notificacion.notificar(
+	    	"error", 
+	    	"buscarIP", 
+	    	CONF.interfaz.panel.buscador.buscarDominioIP.errorAjax, 
+	    	CONF.interfaz.panel.buscador.buscarDominioIP.errorAjaxDesc
+	    );
 	}).complete(function(data) {
 	});
 }
@@ -237,35 +247,34 @@ function agregarMarcadorYVolar(datos){
 			busquedaPorVoz = false;
 		}
 
-		// Saltamos notifición
-		notificacion.notificar("info", CONF.interfaz.panel.buscador.busquedaPorVoz.msgVolando + " " + busqueda); 
+		var metodo = "insertarDominio";
 
 		// Parametros para insertar el dominio a la BBDD
 		var parametrosInsertarDominio = {  
-			"metodo": "insertarDominio", 
+			"metodo": metodo, 
 			"datos": {
 				"dominio" : busqueda,
 				"ip" : ip,
 				"location" : location,
 				"lon" : lon,
 				"lat" : lat
-			}
+			},
+			"bbddMethodsConf" : CONF.baseDatos.methods
 		};
 
 		// Inserción en la BBDD
-		$.ajax ({ 
-			url: CONF.baseDatos.urlAjax,
-			data: parametrosInsertarDominio,
-			type: 'post',
-			datatype: "json"
-		}).done(function(responseData) {
-			//console.log(responseData)
-		}).fail(function(fail) {
-		    notificacion.notificar("error", fail);
-		}).complete(function(data) {
-		});
+		ddbb.conectar(parametrosInsertarDominio);
+
+		// Saltamos notifición
+		var confVoz = CONF.interfaz.panel.buscador.busquedaPorVoz;
+		notificacion.notificar(
+			"info", 
+			"agregarMarcadorYVolar", 
+			confVoz.msgVolando + " " + busqueda + ", " + confVoz.localizadoEn + " " + location
+		); 
 		
-		metasploit.email_harvest(busqueda);
+		if(typeof metasploit !== 'undefined')
+			metasploit.email_harvest(busqueda);
 
 		// Añadimos el marcador
 		map.addMarkerToSource('markers', [lon,lat], busqueda, ip); 
@@ -324,7 +333,12 @@ function getLonLatFromIP(ip,busqueda){
 			}
 		}).done(function(responseData) {
 		}).fail(function() {
-		   	notificacion.notificar("error", CONF.interfaz.panel.buscador.getLonLatFromIP.errorAjax);
+		   	notificacion.notificar(
+		   		"error", 
+		   		"getLonLatFromIP", 
+		   		CONF.interfaz.panel.buscador.getLonLatFromIP.errorAjax, 
+		   		CONF.interfaz.panel.buscador.getLonLatFromIP.errorAjaxDesc
+	   		);
 		});
 	}
 }

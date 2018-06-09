@@ -31,10 +31,10 @@ function actualizarInfoRedPanel(){
 	var textoActualizandoDatos = confPanel.textoActualizandoDatos;
 
 	if(infoRed == "")
-		notificacion.notificar("info","<span class='cargando'><img src='" + imagenLoading + "' class='actualizandoDatos' /></img> <blink class='textoCargando'>" + textoCargandoDatos + "</blink></span>");
+		notificacion.notificar("info", "<span class='cargando'><img src='" + imagenLoading + "' class='actualizandoDatos' /></img> <blink class='textoCargando'>" + textoCargandoDatos + "</blink></span>");
 	else
 		if(!infoRed.includes("<div class=\"actualizacion\""))
-			notificacion.notificar("info","<span class='cargando'><img src='" + imagenLoading + "' class='actualizandoDatos' /></img> <blink class='textoCargando'>" + textoActualizandoDatos + "</blink></span>");
+			notificacion.notificar("info", "<span class='cargando'><img src='" + imagenLoading + "' class='actualizandoDatos' /></img> <blink class='textoCargando'>" + textoActualizandoDatos + "</blink></span>");
 	
 	$("." + CONF.interfaz.panel["layers"].mired["className"]).prop('disabled', true);
 }
@@ -116,7 +116,12 @@ for (var id in layersMenu) {
 				} else {
 					var noExisteUrlAjax = CONF.interfaz.panel.layersErrors.noExisteUrlAjax
 					var mirarConf = CONF.interfaz.panel.layersErrors.mirarConf;
-					notificacion.notificar("error", noExisteUrlAjax + " '" + this.textContent + "' " + mirarConf);
+					notificacion.notificar(
+						"error", 
+						"Layers botonera lateral", 
+						noExisteUrlAjax + " '" + this.textContent + "'", 
+						mirarConf
+					);
 				}
 			}
 		}
