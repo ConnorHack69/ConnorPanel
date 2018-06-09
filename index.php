@@ -38,11 +38,6 @@
 	<script id="intergram" type="text/javascript" src="https://www.intergram.xyz/js/widget.js"></script>
 
 	<script src='js/togeojson.js'></script>
-	<script>
-		$.ajax('kml/CCTV.kml').done(function(xml) {
-		    console.log(toGeoJSON.kml(xml));
-		});
-	</script>
 
 	<link href='css/style.css' rel='stylesheet' />
 	<link href='css/core.css' rel='stylesheet' />

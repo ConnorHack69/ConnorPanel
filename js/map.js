@@ -118,9 +118,7 @@ map.getSourceFeatures = function(source) {
 	return map.getSource(source)._options.data.features;
 }
 
-// Añadir punto al mapa
-map.addMarkerToSource = function(source, lonLat, titulo, ip) {
-	// Si no existe el source contenedor de puntos, lo creamos
+map.crearSource = function(source){
 	if(!map.getSource(source)){
 		map.addSource(source, {
 			"type": "geojson",
@@ -128,13 +126,11 @@ map.addMarkerToSource = function(source, lonLat, titulo, ip) {
 			    "type": "FeatureCollection",
 			    "features": []
 			}
-		    });
+		});
 	}
-
-	// Recogemos el source (ya existe si o si)
-	var sourceTemp = map.getSource(source);
-	
-	var nuevoMarker = {
+}
+map.crearMarcador = function(titulo, lonLat){
+	return {
 		"type": "Feature",
 		"geometry": {
 		    "type": "Point",
@@ -144,7 +140,17 @@ map.addMarkerToSource = function(source, lonLat, titulo, ip) {
 		    "title": titulo,
 		    "marker-symbol": "default_marker"
 		}
-    	};
+    };
+}
+// Añadir punto al mapa
+map.addMarkerToSource = function(source, lonLat, titulo, ip) {
+	// Si no existe el source contenedor de puntos, lo creamos
+	map.crearSource(source);
+
+	// Recogemos el source (ya existe si o si)
+	var sourceTemp = map.getSource(source);
+	
+	var nuevoMarker = map.crearMarcador(titulo, lonLat);
 	
 	// Añadimos al final del array de Features, uno nuevo con los datos recogidos como params
 	sourceTemp._data.features[sourceTemp._data.features.length] = nuevoMarker;
@@ -168,7 +174,7 @@ map.addMarkerToSource = function(source, lonLat, titulo, ip) {
 		}
 	});
 	
-	// Añadimos un Layer con el source recodigo
+	// Añadimos un Layer con el source recogido
 	map.addLayer({
 		"id": source,
 		"source": source,
@@ -181,16 +187,27 @@ map.addMarkerToSource = function(source, lonLat, titulo, ip) {
 	});
 }
 
-map.addKMLFiles = function(){
-	const testFolder = '../kml/';
+// Load JSON files into Markers. CSS Class has to be ".marker_NAMEOFTHEFILEJSON" with no extension
+map.addGeoJSONFiles = function(){
+	const testFolder = 'geoJson/';
 	$.ajax ({ 
-		url: 'php/getKMLFileList.php',
-		data: {kml: testFolder},
+		url: 'php/getGeoJSONFileList.php',
+		data: {geojson: "../" + testFolder},
 		type: 'post',
         success: function( data ) { 
         	var archivos = data.replace("[", "").replace("]", "").split(",");
-        	for(var i = 2; i < archivos.length; i++)
-				console.log(archivos[i]);
+        	for(var i = 2; i < archivos.length; i++){
+    			var nombreCapa = archivos[i].replace(/['"]+/g, '');
+    			$.getJSON(testFolder+nombreCapa, function (geojson) {
+				    geojson.features.forEach(function (marker) {
+						var el = document.createElement('div');
+						el.className = 'marker_' + nombreCapa.split(".")[0];
+						new mapboxgl.Marker(el)
+							.setLngLat(marker.geometry.coordinates)
+							.addTo(map);
+				    });
+				});
+        	}
         }
 	});
 }
