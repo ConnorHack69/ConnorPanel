@@ -1,7 +1,7 @@
 <?php
 	$servername = "localhost";
 	$username = "root";
-	$password = "AQUI_TU_PASS";
+	$password = "001FAF7C6677";
 	$dbname = "panel";
 
 	// Create connection

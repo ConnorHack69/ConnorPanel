@@ -201,7 +201,7 @@ map.addGeoJSONFiles = function(){
     			$.getJSON(testFolder+nombreCapa, function (geojson) {
 				    geojson.features.forEach(function (marker) {
 						var el = document.createElement('div');
-						el.className = 'marker_' + nombreCapa.split(".")[0];
+						el.className = 'marker_' + marker.name;
 						new mapboxgl.Marker(el)
 							.setLngLat(marker.geometry.coordinates)
 							.addTo(map);

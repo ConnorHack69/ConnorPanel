@@ -22,7 +22,7 @@ body {
     background: #1d3c2f;
     margin: 10px;
     padding: 2px 15px;
-    border: 1px solid #33614c;
+    border: 2px solid #33614c;
     border-radius: 15px;
     text-align: center;
 }
@@ -429,6 +429,15 @@ section:last-child {
 }
 .marker_CCTV {
 	background-image: url('../images/CCTV.svg');
+  	background-size: cover;
+  	width: 50px;
+  	height: 50px;
+  	border-radius: 50%;
+  	cursor: pointer;
+  	opacity: 80%;
+}
+.marker_WIFIFREE {
+	background-image: url('../images/wifi.svg');
   	background-size: cover;
   	width: 50px;
   	height: 50px;
