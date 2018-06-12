@@ -54,6 +54,7 @@
 
 	<link href='css/style.css' rel='stylesheet' />
 	<link href='css/core.css' rel='stylesheet' />
+	<link href='css/progress.css' rel='stylesheet' />
 	<link href="css/font-awesome.min.css" rel="stylesheet" />
 </head>
 <body>
@@ -105,6 +106,10 @@
 
 	<script src='js/map_config.js'></script>
 	<script src='js/map.js'></script>
+
+	<script src='js/helpers.js'></script>
+	<script src='js/app.js'></script>
+	
 	<script src='js/voice.js'></script>
 	<script src='js/notificacion.js'></script>
 	<script src='js/draganddrop.js'></script>
