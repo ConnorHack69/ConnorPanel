@@ -78,9 +78,17 @@ class Panel {
     }
   }
 
-  addTablaDatos(){
-    // LLamada por ajax a un servicio PHP que devuelva de una base de datos todos los dominios y mostrarlos en una tabla
-    $("#"+this.id + "_panelDivContenido").append($('<table class="coreTabla"/>'+titulo+'</table>').attr('id', this.id+'_corePanelTabla'));
+  addTablaDatos(id, metodo, tablaBBDD, filter){ // method = getDominios, tabla Dominios, filter {"where" : "1=1"}
+    var params = {  
+      "metodo": metodo, 
+      "datos": {
+        "tabla" : tablaBBDD,
+        "filtros" : filter
+      },
+      "bbddMethodsConf" : CONF.baseDatos.methods
+    };
+
+    $("#"+ id + "_panelDivContenido").append($(ddbb.getTabla(params)).attr('id', id+'_corePanelTabla'));
   }
 
   onClickPanel(funcion){

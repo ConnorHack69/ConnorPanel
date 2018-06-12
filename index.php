@@ -21,8 +21,8 @@
 	<link href="https://unpkg.com/leaflet@1.3.1/dist/leaflet.css" rel="stylesheet" />
 	<script src="https://unpkg.com/leaflet@1.3.1/dist/leaflet.js"></script>
 	
-	<script src='https://api.mapbox.com/mapbox.js/v3.1.1/mapbox.js'></script>
-	<link href='https://api.mapbox.com/mapbox.js/v3.1.1/mapbox.css' rel='stylesheet' />
+	<script src='https://api.mapbox.com/mapbox.js/v3.0.1/mapbox.js'></script>
+  <link href='https://api.mapbox.com/mapbox.js/v3.0.1/mapbox.css' rel='stylesheet' />
 
 	<script src='https://api.mapbox.com/mapbox-gl-js/v0.44.2/mapbox-gl.js'></script>
 	<link href='https://api.mapbox.com/mapbox-gl-js/v0.44.2/mapbox-gl.css' rel='stylesheet' />
@@ -84,7 +84,7 @@
 			<div id="divShell" class="shell-wrap resizable" draggable="true"></div>
 			<div id="notification" style="display: none;"></div>
 		</div>
-		<div id='featuresSombreado'></div>
+		<!--<div id='featuresSombreado'></div>-->
 		<div id='features'></div>
 	</div>
 	<!-- Primero importamos la configuración básica de la web -->

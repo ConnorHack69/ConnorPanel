@@ -34,6 +34,9 @@ for(var boton in botoneraConf.botones){
 				panel.addBoton(botonPulsado, busqReali.panelFuncion.botones[b].texto,busqReali.panelFuncion.botones[b].funcion);
 			}
 
+
+			panel.addTablaDatos(botonPulsado, "getDominios", "dominio", {"where": "1=1"});
+
 			herramientas.panelesActivos[busqReali.panelFuncion.titulo] = panel;
 		};
 	}

@@ -83,6 +83,134 @@ map.on("load", function() {
     	map.getCanvas().style.cursor = '';
 	});
 	map.add3Dbuildings();
+	/*map.addSource("earthquakes", {
+        type: "geojson",
+        // Point to GeoJSON data. This example visualizes all M1.0+ earthquakes
+        // from 12/22/15 to 1/21/16 as logged by USGS' Earthquake hazards program.
+        data: "geoJson/CCTV.geojson",
+        cluster: true,
+        clusterMaxZoom: 21, // Max zoom to cluster points on
+        clusterRadius: 50 // Radius of each cluster when clustering points (defaults to 50)
+    });
+	map.addLayer({
+        id: "clusters",
+        type: "circle",
+        source: "earthquakes",
+        filter: ["has", "point_count"],
+        paint: {
+            // Use step expressions (https://www.mapbox.com/mapbox-gl-js/style-spec/#expressions-step)
+            // with three steps to implement three types of circles:
+            //   * Blue, 20px circles when point count is less than 100
+            //   * Yellow, 30px circles when point count is between 100 and 750
+            //   * Pink, 40px circles when point count is greater than or equal to 750
+            "circle-color": [
+                "step",
+                ["get", "point_count"],
+                "#51bbd6",
+                100,
+                "#f1f075",
+                750,
+                "#f28cb1"
+            ],
+            "circle-radius": [
+                "step",
+                ["get", "point_count"],
+                30,
+                100,
+                40,
+                750,
+                50
+            ]
+        }
+    });
+
+    map.addLayer({
+        id: "cluster-count",
+        type: "symbol",
+        source: "earthquakes",
+        filter: ["has", "point_count"],
+        layout: {
+			"icon-image": "CCTV",
+	        "icon-size": 0.9,
+            "text-field": "{point_count_abbreviated}",
+            "text-font": ["DIN Offc Pro Medium", "Arial Unicode MS Bold"],
+            //"text-size": 18,
+	      	"text-offset": [0.6, 0.6],
+	      	"text-anchor": "top",
+	      	"text-optional": true
+        }
+    });
+
+    map.addLayer({
+        id: "unclustered-point",
+        type: "symbol",
+        source: "earthquakes",
+        filter: ["!has", "point_count"],
+        layout: {
+            "icon-image" : "CCTV",
+            "icon-size" : 1
+        }
+    });
+
+	var popup = new mapboxgl.Popup({
+        closeButton: false,
+        closeOnClick: false
+    });
+
+    map.on('mouseenter', 'cluster-count', function(e) {
+        // Change the cursor style as a UI indicator.
+        map.getCanvas().style.cursor = 'pointer';
+
+        var coordinates = e.features[0].geometry.coordinates.slice();
+
+        // Ensure that if the map is zoomed out such that multiple
+        // copies of the feature are visible, the popup appears
+        // over the copy being pointed to.
+        while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+            coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+        }
+
+        // Populate the popup and set its coordinates
+        // based on the feature found.
+        if(e.features[0].layer && e.features[0].layer.source){
+        	var description = e.features[0].layer.source;
+       		popup.setLngLat(coordinates)
+            	.setHTML("<span class='desccluster'>" + description + "</span>")
+            	.addTo(map);
+        }
+    });
+
+    map.on('mouseleave', 'cluster-count', function() {
+        map.getCanvas().style.cursor = '';
+        popup.remove();
+    });
+
+    map.on('mouseenter', 'unclustered-point', function(e) {
+        // Change the cursor style as a UI indicator.
+        map.getCanvas().style.cursor = 'pointer';
+
+        var coordinates = e.features[0].geometry.coordinates.slice();
+        var description = e.features[0].properties.description;
+
+        // Ensure that if the map is zoomed out such that multiple
+        // copies of the feature are visible, the popup appears
+        // over the copy being pointed to.
+        while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+            coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+        }
+
+        // Populate the popup and set its coordinates
+        // based on the feature found.
+        popup.setLngLat(coordinates)
+            .setHTML("<span class='descuncluster'>" + description + "</span>")
+            .addTo(map);
+    });
+
+    map.on('mouseleave', 'unclustered-point', function() {
+        map.getCanvas().style.cursor = '';
+        popup.remove();
+    });*/
+
 	map.addGeoJSONFiles();
 	map.flyToMe();
 });

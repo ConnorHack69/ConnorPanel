@@ -186,6 +186,115 @@ map.addMarkerToSource = function(source, lonLat, titulo, ip) {
 		}
 	});
 }
+map.crearCluster = function(dir, nombreCapa){
+	var nombre = nombreCapa.split(".")[0].split("_")[0];
+	map.addSource(nombreCapa.split(".")[0], {
+        type: "geojson",
+        data: dir + nombreCapa,
+        cluster: true,
+        clusterMaxZoom: 21,
+        clusterRadius: 50
+    });
+	map.addLayer({
+        id: "clusters_" + nombreCapa.split(".")[0],
+        type: "circle",
+        source: nombreCapa.split(".")[0],
+        filter: ["has", "point_count"],
+        paint: {
+            "circle-color": [
+                "step",
+                ["get", "point_count"],
+                "#51bbd6",
+                100,
+                "#f1f075",
+                750,
+                "#f28cb1"
+            ],
+            "circle-radius": [
+                "step",
+                ["get", "point_count"],
+                30,
+                100,
+                40,
+                750,
+                50
+            ]
+        }
+    });
+
+    map.addLayer({
+        id: "cluster-count_"+nombreCapa.split(".")[0],
+        type: "symbol",
+        source: nombreCapa.split(".")[0],
+        filter: ["has", "point_count"],
+        layout: {
+			"icon-image": nombre,
+	        "icon-size": 0.9,
+            "text-field": "{point_count_abbreviated}",
+            "text-font": ["DIN Offc Pro Medium", "Arial Unicode MS Bold"],
+	      	"text-offset": [0.6, 0.6],
+	      	"text-anchor": "top",
+	      	"text-optional": true
+        }
+    });
+
+    map.addLayer({
+        id: "unclustered-point_"+nombreCapa.split(".")[0],
+        type: "symbol",
+        source: nombreCapa.split(".")[0],
+        filter: ["!has", "point_count"],
+        layout: {
+            "icon-image" : nombre,
+            "icon-size" : 1
+        }
+    });
+
+	var popup = new mapboxgl.Popup({
+        closeButton: false,
+        closeOnClick: false
+    });
+
+    map.on('mouseenter', 'cluster-count_'+nombreCapa.split(".")[0], function(e) {
+        map.getCanvas().style.cursor = 'pointer';
+
+        if(e.features[0].geometry){
+	        var coordinates = e.features[0].geometry.coordinates.slice();
+	        while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+	            coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+	        }
+	        if(e.features[0].layer && e.features[0].layer.source){
+	        	var description = e.features[0].layer.source;
+	       		popup.setLngLat(coordinates)
+	            	.setHTML("<span class='desccluster'>" + description + "</span>")
+	            	.addTo(map);
+	        }
+	    }
+    });
+
+    map.on('mouseleave', 'cluster-count_'+nombreCapa.split(".")[0], function() {
+        map.getCanvas().style.cursor = '';
+        popup.remove();
+    });
+
+    map.on('mouseenter', 'unclustered-point_'+nombreCapa.split(".")[0], function(e) {
+        map.getCanvas().style.cursor = 'pointer';
+        if(e.features[0].geometry){
+	        var coordinates = e.features[0].geometry.coordinates.slice();
+	        var description = e.features[0].properties.description;
+	        while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+	            coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+	        }
+	        popup.setLngLat(coordinates)
+	            .setHTML("<span class='descuncluster'>" + description + "</span>")
+	            .addTo(map);
+        }
+    });
+
+    map.on('mouseleave', 'unclustered-point_'+nombreCapa.split(".")[0], function() {
+        map.getCanvas().style.cursor = '';
+        popup.remove();
+    });
+}
 
 // Load JSON files into Markers. CSS Class has to be ".marker_NAMEOFTHEFILEJSON" with no extension
 map.addGeoJSONFiles = function(){
@@ -198,15 +307,7 @@ map.addGeoJSONFiles = function(){
         	var archivos = data.replace("[", "").replace("]", "").split(",");
         	for(var i = 2; i < archivos.length; i++){
     			var nombreCapa = archivos[i].replace(/['"]+/g, '');
-    			$.getJSON(testFolder+nombreCapa, function (geojson) {
-				    geojson.features.forEach(function (marker) {
-						var el = document.createElement('div');
-						el.className = 'marker_' + marker.name;
-						new mapboxgl.Marker(el)
-							.setLngLat(marker.geometry.coordinates)
-							.addTo(map);
-				    });
-				});
+    			map.crearCluster(testFolder, nombreCapa);
         	}
         }
 	});
