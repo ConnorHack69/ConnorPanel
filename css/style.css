@@ -470,6 +470,15 @@ section:last-child {
     overflow: hidden !important;
     overflow-y: scroll !important;
     padding: 15px !important;
+    border: 2px solid #a0d283 !important;
+    border-radius: 25px !important;
+}
+.mapboxgl-popup-close-button {
+	right: 5px !important;
+    top: 5px !important;
+}
+.mapboxgl-popup-anchor-top .mapboxgl-popup-tip {
+	border-bottom-color: #4ea37e !important;
 }
 .prop {
     font-weight: bold;

@@ -192,8 +192,8 @@ map.crearCluster = function(dir, nombreCapa){
         type: "geojson",
         data: dir + nombreCapa,
         cluster: true,
-        clusterMaxZoom: 22,
-        clusterRadius: 20
+        clusterMaxZoom: 16,
+        clusterRadius: 40
     });
 	map.addLayer({
         id: "clusters_" + nombreCapa.split(".")[0],
@@ -219,15 +219,6 @@ map.crearCluster = function(dir, nombreCapa){
                 750,
                 50
             ]
-        },
-        layout: {
-			"icon-image": nombre,
-	        "icon-size": 0.9,
-            "text-field": "{point_count_abbreviated}",
-            "text-font": ["DIN Offc Pro Medium", "Arial Unicode MS Bold"],
-	      	"text-offset": [0.6, 0.6],
-	      	"text-anchor": "top",
-	      	"text-optional": true
         }
     });
 
