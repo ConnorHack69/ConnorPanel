@@ -63,7 +63,7 @@
 		<div id="herramientas">
 			<div class="usuario">
 				<p class="usuarioMsg">Welcome <strong><?php echo $_SESSION['username']; ?></strong></p>
-				<p><a class="cerrarSesion" href="index.php?logout='1'">Cerrar Sesión</a></span>
+				<p class="usuarioCS"><a class="cerrarSesion" href="index.php?logout='1'">Cerrar Sesión</a></p>
 			</div>
 			<input type="text" name="buscador" id="buscador" size="1" spellcheck="false"  ondrop="dropHandler(event);" onkeyup="buscar()" onfocus="escuchar()" x-webkit-speech autofocus />
   			<audio src="" hidden class=speech></audio>

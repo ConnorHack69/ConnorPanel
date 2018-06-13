@@ -192,8 +192,8 @@ map.crearCluster = function(dir, nombreCapa){
         type: "geojson",
         data: dir + nombreCapa,
         cluster: true,
-        clusterMaxZoom: 21,
-        clusterRadius: 50
+        clusterMaxZoom: 22,
+        clusterRadius: 20
     });
 	map.addLayer({
         id: "clusters_" + nombreCapa.split(".")[0],
@@ -219,6 +219,15 @@ map.crearCluster = function(dir, nombreCapa){
                 750,
                 50
             ]
+        },
+        layout: {
+			"icon-image": nombre,
+	        "icon-size": 0.9,
+            "text-field": "{point_count_abbreviated}",
+            "text-font": ["DIN Offc Pro Medium", "Arial Unicode MS Bold"],
+	      	"text-offset": [0.6, 0.6],
+	      	"text-anchor": "top",
+	      	"text-optional": true
         }
     });
 
@@ -245,7 +254,7 @@ map.crearCluster = function(dir, nombreCapa){
         filter: ["!has", "point_count"],
         layout: {
             "icon-image" : nombre,
-            "icon-size" : 1
+            "icon-size" : 0.9
         }
     });
 
@@ -276,18 +285,36 @@ map.crearCluster = function(dir, nombreCapa){
         popup.remove();
     });
 
-    map.on('mouseenter', 'unclustered-point_'+nombreCapa.split(".")[0], function(e) {
-        map.getCanvas().style.cursor = 'pointer';
-        if(e.features[0].geometry){
-	        var coordinates = e.features[0].geometry.coordinates.slice();
-	        var description = e.features[0].properties.description;
-	        while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
-	            coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+    var popup;
+
+    map.on('mouseenter', 'unclustered-point_'+nombreCapa.split(".")[0], function() {
+    	if(map.getZoom() > 12)
+    		map.getCanvas().style.cursor = 'pointer';
+    });
+    
+    map.on('click', 'unclustered-point_'+nombreCapa.split(".")[0], function(e) {
+        if(map.getZoom() > 12) {
+	        if(e.features[0].geometry){
+		        var coordinates = e.features[0].geometry.coordinates.slice();
+	            var desc = '<table>';
+	            for(var prop in e.features[0].properties){
+	                if(expEsDominio.test(e.features[0].properties[prop].split("/")[2]))
+	                    desc += '<tr><td colspan="2" class="propURL"><a href="'+e.features[0].properties[prop]+'" target="_blank">'+prop+'</a></td></tr>';
+	                else
+	                    desc += '<tr><td class="prop">'+prop+'</td><td class="propText">'+e.features[0].properties[prop]+'</td></tr>';
+	            }
+	            desc += '</table>';
+	            //var description = e.features[0].properties.description;
+	            while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+	                coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+	            }
+	            
+	            new mapboxgl.Popup()
+	                .setLngLat(coordinates)
+	                .setHTML(desc)
+	                .addTo(map);
 	        }
-	        popup.setLngLat(coordinates)
-	            .setHTML("<span class='descuncluster'>" + description + "</span>")
-	            .addTo(map);
-        }
+    	}
     });
 
     map.on('mouseleave', 'unclustered-point_'+nombreCapa.split(".")[0], function() {
@@ -306,8 +333,8 @@ map.addGeoJSONFiles = function(){
         success: function( data ) { 
         	var archivos = data.replace("[", "").replace("]", "").split(",");
         	for(var i = 2; i < archivos.length; i++){
-    			var nombreCapa = archivos[i].replace(/['"]+/g, '');
-    			map.crearCluster(testFolder, nombreCapa);
+    			var nombreCapa = archivos[i].replace(/['"]+/g, '')
+;    			map.crearCluster(testFolder, nombreCapa);
         	}
         }
 	});

@@ -20,7 +20,7 @@
     }
     echo "</tr>";
     */
-	function getDominios($conn, $data) {
+	/*function getDominios($conn, $data) {
 		$tabla = $data["tabla"];
 		$filtros = $data["filtros"];
 		$sql = "SELECT * FROM " . $tabla . " WHERE " . $filtros;
@@ -43,5 +43,5 @@
 		} else {
 			echo -2;
 		}
-	}
+	}*/
 ?>

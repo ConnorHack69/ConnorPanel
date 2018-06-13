@@ -97,6 +97,29 @@ if (window.File && window.FileReader && window.FileList && window.Blob) {
                     });
                     // add layer
                     map.addLayer(m.layer,"place-village");
+
+                    map.on('click', m.layer.id, function (e) {
+                        if(map.getZoom() > 12) {
+                            var coordinates = e.features[0].geometry.coordinates.slice();
+                            var desc = '<table>';
+                            for(var prop in e.features[0].properties){
+                                if(expEsDominio.test(e.features[0].properties[prop].split("/")[2]))
+                                    desc += '<tr><td colspan="2" class="propURL"><a href="'+e.features[0].properties[prop]+'" target="_blank">'+prop+'</a></td></tr>';
+                                else
+                                    desc += '<tr><td class="prop">'+prop+'</td><td class="propText">'+e.features[0].properties[prop]+'</td></tr>';
+                            }
+                            desc += '</table>';
+                            //var description = e.features[0].properties.description;
+                            while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+                                coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+                            }
+
+                            new mapboxgl.Popup()
+                                .setLngLat(coordinates)
+                                .setHTML(desc)
+                                .addTo(map);
+                        }
+                    });
                     // set progress to max
                     data[m.id] = gJson;
                   }

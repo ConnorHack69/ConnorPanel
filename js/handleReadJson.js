@@ -194,7 +194,7 @@ onmessage = function(e) {
      */
 
     // Set random id for source and layer
-    var id = "mgl_drop_" + randomString(5) + "_" + fileName ;
+    var id = fileName ;
     // Set random color
     var ran = Math.random();
     var colA = "yellow";

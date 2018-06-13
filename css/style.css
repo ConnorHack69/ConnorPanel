@@ -26,7 +26,7 @@ body {
     border-radius: 15px;
     text-align: center;
 }
-.usuarioMsg {
+.usuarioMsg, .usuarioCS {
 	color: #359449;
 	/* Unselectable */
     -webkit-touch-callout: none;
@@ -456,7 +456,7 @@ section:last-child {
 .cerrarSesion:hover   { color: #359449; text-decoration: none; }
 .cerrarSesion:active  { color: #359449; text-decoration: none; }
 .desccluster {
-	color: ffffff;
+	color: #ffffff;
 	font-size: 24px;
 }
 .mapboxgl-popup-tip {
@@ -465,4 +465,22 @@ section:last-child {
 }
 .mapboxgl-popup-content {
     background: #4ea37e !important;
+    max-height: 400px !important;
+    max-width: 600px !important;
+    overflow: hidden !important;
+    overflow-y: scroll !important;
+    padding: 15px !important;
+}
+.prop {
+    font-weight: bold;
+    font-size: 20px;
+}
+.propText {
+    font-size: 20px;
+}
+.propURL {
+    font-weight: bold;
+    font-size: 22px;
+    text-align: center;
+    color: blue;
 }
