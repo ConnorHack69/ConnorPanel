@@ -6,6 +6,11 @@ map.getAllMarkers = function() {
 	return allMarkers;
 }
 
+// Devuelve el array de todos los layers
+map.getAllLayers = function() {
+	return map.getStyle().layers;
+}
+
 /* Al abrir el panel, deshabilitamos el mapa. 
    Con esto solucionamos el problema de poder jugar con el mapa por 
    el margen inferior del panel, ya que el div no era 100% height */
@@ -329,6 +334,36 @@ map.addGeoJSONFiles = function(){
         	}
         }
 	});
+}
+
+map.addLayerSelectorPanel = function(){
+	var id = CONF.interfaz.panel.layerSelectorPanel.id;
+	// Width is added for hovering it but have to pass as param
+	// Height isn't used cause is auto but have to pass as param
+	var widthPanel = CONF.interfaz.panel.layerSelectorPanel.width;
+	var widthOverPanel = CONF.interfaz.panel.layerSelectorPanel.widthOver;
+	var heightPanel = CONF.interfaz.panel.layerSelectorPanel.height;
+	var classNamePanel = CONF.interfaz.panel.layerSelectorPanel.className;
+	var nombrePanel = CONF.interfaz.panel.layerSelectorPanel.nombrePanel;
+	map.layerSelectorPanel = new Panel(id, widthPanel, heightPanel, classNamePanel, false);
+	var panelId = map.layerSelectorPanel.id + "_panel";
+	document.getElementById(panelId).onmouseover = function() {
+		var parsedWidthOverPanel;
+		if(!isNaN(widthOverPanel))
+	        parsedWidthOverPanel = widthOverPanel + "px";
+		else
+	        parsedWidthOverPanel = widthOverPanel;
+		document.getElementById(panelId).style.width = parsedWidthOverPanel;
+	}
+	document.getElementById(panelId).onmouseleave = function() {
+		var parsedWidthPanel;
+		if(!isNaN(widthPanel))
+	        parsedWidthPanel = widthPanel + "px";
+		else
+	        parsedWidthPanel = widthPanel;
+		document.getElementById(panelId).style.width = parsedWidthPanel;
+	}
+	map.layerSelectorPanel.addTitulo(id, nombrePanel);
 }
 
 // Añadir capa con edificios 3D

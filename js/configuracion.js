@@ -69,6 +69,14 @@ var CONF = {
 					"localizadoEn" : "localizado en"
 				}
 			},
+			"layerSelectorPanel" : {
+				"id" : "layerSelectorPanel",
+				"width" : 60,
+				"widthOver" : 350,
+				"height" : "auto",
+				"className" : "layerSelectorPanel",
+				"nombrePanel" : "Layer Selector Panel"
+			},
 			"botonera" : {
 				"id" : "botonera",
 				"className" : "botonera",

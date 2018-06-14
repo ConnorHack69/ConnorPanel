@@ -27,7 +27,18 @@ class Panel {
       divContenido.attr('class', "corePanelDivContenido");
 
       // Div completo del Panel
-      var panelHtml = $('<div style="position: absolute;display:block;float:left;width:'+this.width+'px;height:'+this.height+'px;"></div>');
+      var parsedWidth;
+      var parsedHeight;
+      if(!isNaN(this.width))
+        parsedWidth = this.width + "px";
+      else
+        parsedWidth = this.width;
+
+      if(!isNaN(this.height))
+        parsedHeight = this.height + "px";
+      else
+        parsedHeight = this.height;
+      var panelHtml = $('<div style="position: absolute;display:block;float:left;width:' + parsedWidth + ';height:' + parsedHeight + ';"></div>');
       panelHtml.attr('id', this.id+"_panel");
       panelHtml.attr('class', "corePanel " + this.className);
 
