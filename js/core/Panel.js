@@ -89,6 +89,105 @@ class Panel {
     }
   }
 
+  addLayerSelectorPanel(id){
+    var layerselector = '<div class="container"><div id="treeview"></div><br /><p><span id="checkedCount"></span></p></div>';
+    document.getElementById(id + "_panelDivContenido").innerHTML = layerselector;
+    $(function ($) {
+        function onCheck() {
+            // find all LI elements in the treeview and determine how many are checked
+            var checkedCount = $("#treeview").swidget("TreeView").element.find("li").filter(function () {
+                return $("#treeview").swidget("TreeView").checked($(this));
+            }).length;
+            $("#checkedCount").html(checkedCount + " items checked");
+        }
+
+        /* CONTINUAR AQUI */
+        var sources = map.getAllSources();
+        var layers = map.getAllLayers();
+        var dataJson = {};
+        for(var source in sources){
+          for(var layer in layers){
+            if(layers[layer].source && layers[layer].source == source){
+              console.log("Se ha encontrado la capa " + layers[layer].id + " en el source " + source);
+            }
+          }
+        }
+        $("#treeview").shieldTreeView({
+            checkboxes: {
+                enabled: true,
+                children: true
+            },
+            events: {
+                check: onCheck
+            },
+            dataSource: {
+                data: [
+                    {
+                        text: "GeoJSON",
+                        iconUrl: "/images/geojson.png",
+                        expanded: true,
+                        items: [
+                            {
+                                text: "js",
+                                iconUrl: "/Content/img/file/folder.png",
+                                items: [
+                                    {
+                                        text: "jquery.10.1.min.js",
+                                        iconUrl: "/Content/img/file/file_extension_txt.png"
+                                    }
+                                ]
+                            },
+                            {
+                                text: "resources",
+                                iconUrl: "/Content/img/file/folder.png",
+                                expanded: true,
+                                items: [
+                                    {
+                                        text: "license.pdf",
+                                        iconUrl: "/Content/img/file/file_extension_pdf.png"
+                                    },
+                                    {
+                                        text: "privacy.pdf",
+                                        iconUrl: "/Content/img/file/file_extension_pdf.png"
+                                    },
+                                    {
+                                        text: "report.xls",
+                                        iconUrl: "/Content/img/file/file_extension_xls.png"
+                                    }
+                                ]
+                            },
+                            {
+                                text: "styles",
+                                iconUrl: "/Content/img/file/folder.png",
+                                expanded: true,
+                                items: [
+                                    {
+                                        text: "logo.jpg",
+                                        iconUrl: "/Content/img/file/file_extension_jpeg.png"
+                                    },
+                                    {
+                                        text: "theme.css",
+                                        iconUrl: "/Content/img/file/file_extension_txt.png"
+                                    }
+                                ]
+                            },
+                            {
+                                text: "about.html",
+                                iconUrl: "/Content/img/file/file_extension_html.png"
+                            },
+                            {
+                                text: "index.html",
+                                iconUrl: "/Content/img/file/file_extension_html.png"
+                            }
+                        ]
+                    }
+                ]
+            }
+        });
+        onCheck();
+    });
+  }
+
   addTablaDatos(id, metodo, tablaBBDD, filter){ // method = getDominios, tabla Dominios, filter {"where" : "1=1"}
     var params = {  
       "metodo": metodo, 

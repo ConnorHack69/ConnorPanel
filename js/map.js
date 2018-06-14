@@ -11,6 +11,11 @@ map.getAllLayers = function() {
 	return map.getStyle().layers;
 }
 
+// Devuelve el array de todos los layers
+map.getAllSources = function() {
+	return map.getStyle().sources;
+}
+
 /* Al abrir el panel, deshabilitamos el mapa. 
    Con esto solucionamos el problema de poder jugar con el mapa por 
    el margen inferior del panel, ya que el div no era 100% height */
@@ -364,6 +369,7 @@ map.addLayerSelectorPanel = function(){
 		document.getElementById(panelId).style.width = parsedWidthPanel;
 	}
 	map.layerSelectorPanel.addTitulo(id, nombrePanel);
+	map.layerSelectorPanel.addLayerSelectorPanel(id);
 }
 
 // Añadir capa con edificios 3D
