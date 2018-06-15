@@ -84,7 +84,6 @@ map.on("load", function() {
 	});
 	map.add3Dbuildings();
 	map.addGeoJSONFiles();
-	map.addLayerSelectorPanel();
 	map.flyToMe();
 });
 

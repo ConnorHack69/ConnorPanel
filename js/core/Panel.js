@@ -94,24 +94,85 @@ class Panel {
     document.getElementById(id + "_panelDivContenido").innerHTML = layerselector;
     $(function ($) {
         function onCheck() {
-            // find all LI elements in the treeview and determine how many are checked
-            var checkedCount = $("#treeview").swidget("TreeView").element.find("li").filter(function () {
-                return $("#treeview").swidget("TreeView").checked($(this));
-            }).length;
-            $("#checkedCount").html(checkedCount + " items checked");
+          // find all LI elements in the treeview and determine how many are checked
+          var checkedCount = $("#treeview").swidget("TreeView").element.find("li").filter(function () {
+              return $("#treeview").swidget("TreeView").checked($(this));
+          }).length;
+          $("#checkedCount").html(checkedCount + " items checked");
+
+          var checkeds = $("#treeview").swidget("TreeView").element.find("li").filter(function () {
+              return $("#treeview").swidget("TreeView").checked($(this));
+          });
+
+          // Get checked names
+          var seleccionados = [];
+          for(var check in checkeds)
+            if(checkeds[check] && checkeds[check].innerText)
+              seleccionados.push(checkeds[check].innerText);            
+
+          // Get all layers
+          var layersTemp = map.getAllLayers();
+          for(var l in layersTemp)
+            if(layersTemp[l].source && layersTemp[l].source != 'composite')
+              map.setLayoutProperty(layersTemp[l].id, 'visibility', 'none');
+
+          // If any is selected
+          if(seleccionados.length > 0){
+            for(var selec in seleccionados){
+              var layerName = seleccionados[selec];
+              for(var l in layersTemp)
+                if(layersTemp[l].id.includes(layerName.split("\n")[0]))
+                  map.setLayoutProperty(layersTemp[l].id, 'visibility', 'visible');
+            }
+          }
+          console.log(seleccionados);
         }
 
-        /* CONTINUAR AQUI */
         var sources = map.getAllSources();
         var layers = map.getAllLayers();
-        var dataJson = {};
+        var dataJson = [];
+
         for(var source in sources){
-          for(var layer in layers){
-            if(layers[layer].source && layers[layer].source == source){
-              console.log("Se ha encontrado la capa " + layers[layer].id + " en el source " + source);
+          if(source != 'composite'){
+            var items = [];
+            for(var layer in layers){
+              if(layers[layer].source && layers[layer].source == source){
+                var nombreLayer = layers[layer].id.split("_")[layers[layer].id.split("_").length-1];
+                var exists = false;
+                if(items && items.length > 0){
+                  for(var it in items){
+                    if(items[it].text == nombreLayer)
+                      exists = true;
+                  }
+                }
+                if(!exists)
+                  items.push({text: nombreLayer, iconUrl: "/Content/img/file/file_extension_txt.png"});
+              }
+            }
+            var sourceName = source.split("_")[0];
+            var item;
+            if(dataJson && dataJson.length > 0){
+              var exists = false;
+              for(var dj in dataJson){
+                if(dataJson[dj].text && dataJson[dj].text == sourceName){
+                  exists = true;
+                }
+              }
+              if(exists){
+                  for(var it in items) {
+                    dataJson[dj].items.push(items[it]);
+                  }
+                } else {
+                  item = {text: source.split("_")[0], iconUrl: "/Content/img/file/folder.png", items: items};
+                  dataJson.push(item);
+                }
+            } else {
+              item = {text: source.split("_")[0], iconUrl: "/Content/img/file/folder.png", items: items};
+              dataJson.push(item);
             }
           }
         }
+
         $("#treeview").shieldTreeView({
             checkboxes: {
                 enabled: true,
@@ -124,62 +185,9 @@ class Panel {
                 data: [
                     {
                         text: "GeoJSON",
-                        iconUrl: "/images/geojson.png",
+                        iconUrl: "images/GEOJSON.png",
                         expanded: true,
-                        items: [
-                            {
-                                text: "js",
-                                iconUrl: "/Content/img/file/folder.png",
-                                items: [
-                                    {
-                                        text: "jquery.10.1.min.js",
-                                        iconUrl: "/Content/img/file/file_extension_txt.png"
-                                    }
-                                ]
-                            },
-                            {
-                                text: "resources",
-                                iconUrl: "/Content/img/file/folder.png",
-                                expanded: true,
-                                items: [
-                                    {
-                                        text: "license.pdf",
-                                        iconUrl: "/Content/img/file/file_extension_pdf.png"
-                                    },
-                                    {
-                                        text: "privacy.pdf",
-                                        iconUrl: "/Content/img/file/file_extension_pdf.png"
-                                    },
-                                    {
-                                        text: "report.xls",
-                                        iconUrl: "/Content/img/file/file_extension_xls.png"
-                                    }
-                                ]
-                            },
-                            {
-                                text: "styles",
-                                iconUrl: "/Content/img/file/folder.png",
-                                expanded: true,
-                                items: [
-                                    {
-                                        text: "logo.jpg",
-                                        iconUrl: "/Content/img/file/file_extension_jpeg.png"
-                                    },
-                                    {
-                                        text: "theme.css",
-                                        iconUrl: "/Content/img/file/file_extension_txt.png"
-                                    }
-                                ]
-                            },
-                            {
-                                text: "about.html",
-                                iconUrl: "/Content/img/file/file_extension_html.png"
-                            },
-                            {
-                                text: "index.html",
-                                iconUrl: "/Content/img/file/file_extension_html.png"
-                            }
-                        ]
+                        items: dataJson
                     }
                 ]
             }

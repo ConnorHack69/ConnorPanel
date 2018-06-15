@@ -202,7 +202,7 @@ map.crearCluster = function(dir, nombreCapa){
         type: "geojson",
         data: dir + nombreCapa,
         cluster: true,
-        clusterMaxZoom: 16,
+        clusterMaxZoom: 14,
         clusterRadius: 40
     });
 	map.addLayer({
@@ -264,6 +264,10 @@ map.crearCluster = function(dir, nombreCapa){
         closeOnClick: false
     });
 
+	map.setLayoutProperty("clusters_" + nombreCapa.split(".")[0], 'visibility', 'none');
+	map.setLayoutProperty("cluster-count_"+nombreCapa.split(".")[0], 'visibility', 'none');
+	map.setLayoutProperty("unclustered-point_"+nombreCapa.split(".")[0], 'visibility', 'none');
+	
     map.on('mouseenter', 'cluster-count_'+nombreCapa.split(".")[0], function(e) {
         map.getCanvas().style.cursor = 'pointer';
 
@@ -299,10 +303,16 @@ map.crearCluster = function(dir, nombreCapa){
 		        var coordinates = e.features[0].geometry.coordinates.slice();
 	            var desc = '<table>';
 	            for(var prop in e.features[0].properties){
-	                if(expEsDominio.test(e.features[0].properties[prop].split("/")[2]))
-	                    desc += '<tr><td colspan="2" class="propURL"><a href="'+e.features[0].properties[prop]+'" target="_blank">'+prop+'</a></td></tr>';
-	                else
-	                    desc += '<tr><td class="prop">'+prop+'</td><td class="propText">'+e.features[0].properties[prop]+'</td></tr>';
+	            	var property = e.features[0].properties[prop];
+	            	if(property != 'null'){
+	            		// Si es un HTML lo que va a cargar desde el parametro y hay una URL, lo coge como tal pero casca el <a> porque le añade todo el html
+	            		if(!isNaN(property))
+		                    desc += '<tr><td class="prop">'+prop+'</td><td class="propText">'+property+'</td></tr>';
+		                else if(property.startsWith("http") && expEsDominio.test(property.split("/")[2]))
+		                    desc += '<tr><td colspan="2" class="propURL"><a href="'+property+'" target="_blank">'+prop+'</a></td></tr>';
+		                else
+		                    desc += '<tr><td class="prop">'+prop+'</td><td class="propText">'+property+'</td></tr>';
+		            }
 	            }
 	            desc += '</table>';
 	            //var description = e.features[0].properties.description;
@@ -337,6 +347,7 @@ map.addGeoJSONFiles = function(){
     			var nombreCapa = archivos[i].replace(/['"]+/g, '')
 ;    			map.crearCluster(testFolder, nombreCapa);
         	}
+        	map.addLayerSelectorPanel();
         }
 	});
 }
