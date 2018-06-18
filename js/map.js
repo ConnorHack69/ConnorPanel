@@ -359,6 +359,7 @@ map.addLayerSelectorPanel = function(){
 	var widthPanel = CONF.interfaz.panel.layerSelectorPanel.width;
 	var widthOverPanel = CONF.interfaz.panel.layerSelectorPanel.widthOver;
 	var heightPanel = CONF.interfaz.panel.layerSelectorPanel.height;
+	var heightOverPanel = CONF.interfaz.panel.layerSelectorPanel.heightOver;
 	var classNamePanel = CONF.interfaz.panel.layerSelectorPanel.className;
 	var nombrePanel = CONF.interfaz.panel.layerSelectorPanel.nombrePanel;
 	map.layerSelectorPanel = new Panel(id, widthPanel, heightPanel, classNamePanel, false);
@@ -370,6 +371,13 @@ map.addLayerSelectorPanel = function(){
 		else
 	        parsedWidthOverPanel = widthOverPanel;
 		document.getElementById(panelId).style.width = parsedWidthOverPanel;
+
+		var parsedHeightOverPanel;
+		if(!isNaN(heightOverPanel))
+	        parsedHeightOverPanel = heightOverPanel + "px";
+		else
+	        parsedHeightOverPanel = heightOverPanel;
+		document.getElementById(panelId).style.height = parsedHeightOverPanel;
 	}
 	document.getElementById(panelId).onmouseleave = function() {
 		var parsedWidthPanel;
@@ -378,6 +386,13 @@ map.addLayerSelectorPanel = function(){
 		else
 	        parsedWidthPanel = widthPanel;
 		document.getElementById(panelId).style.width = parsedWidthPanel;
+
+		var parsedHeightPanel;
+		if(!isNaN(widthPanel))
+	        parsedHeightPanel = heightPanel + "px";
+		else
+	        parsedHeightPanel = heightPanel;
+		document.getElementById(panelId).style.height = parsedHeightPanel;
 	}
 	map.layerSelectorPanel.addTitulo(id, nombrePanel);
 	map.layerSelectorPanel.addLayerSelectorPanel(id);

@@ -106,14 +106,36 @@ class Panel {
 
           // Get checked names
           var seleccionados = [];
-          for(var check in checkeds)
-            if(checkeds[check] && checkeds[check].innerText)
-              seleccionados.push(checkeds[check].innerText);            
+          for(var check in checkeds){
+            // If is subchild
+            if(checkeds[check] && checkeds[check].parentElement && checkeds[check].parentElement.parentElement && checkeds[check].parentElement.parentElement.innerText){
+              var parentText = checkeds[check].parentElement.parentElement.innerText.split("\n")[0];
+              var sources = map.getAllSources();
+              var isChild = false;
+              var checkedTextParsed = checkeds[check].innerText.split("\n")[0];
+              // If has parent, is in sources? If yes, that tell us that is a subchild
+              for(source in sources){
+                if(source == parentText + "_" + checkedTextParsed){
+                  isChild = true;
+                }
+              }
+              // If is a child, add clusters off that GeoJSON to "seleccionados"
+              if(isChild){
+                seleccionados.push("clusters_" + parentText + "_" + checkedTextParsed);
+                seleccionados.push("cluster-count_" + parentText + "_" + checkedTextParsed);
+                seleccionados.push("unclustered-point_" + parentText + "_" + checkedTextParsed);
+              }
+            } else {
+              if(checkeds[check] && checkeds[check].innerText){
+                seleccionados.push(checkeds[check].innerText);            
+              }
+            }
+          }
 
           // Get all layers
           var layersTemp = map.getAllLayers();
           for(var l in layersTemp)
-            if(layersTemp[l].source && layersTemp[l].source != 'composite')
+            if(layersTemp[l].source && layersTemp[l].source != 'composite' && layersTemp[l].source != 'markers')
               map.setLayoutProperty(layersTemp[l].id, 'visibility', 'none');
 
           // If any is selected
@@ -133,7 +155,7 @@ class Panel {
         var dataJson = [];
 
         for(var source in sources){
-          if(source != 'composite'){
+          if(source != 'composite' && source != 'markers'){
             var items = [];
             for(var layer in layers){
               if(layers[layer].source && layers[layer].source == source){

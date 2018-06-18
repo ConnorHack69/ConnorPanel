@@ -1,4 +1,8 @@
 // Cargamos variables necesarias
+
+// Se pone a mano porque si dejamos que nuestro navegador cargue el Lonlat no sale donde deberia
+// Si quitamos tambien la funcion del navegador (map_config -> flyToMe()), se ha creado la funcion
+// mediante una petidion PHP para resolver el LonLat segun la IP publica, pero tampoco es precisa
 var latManual = CONF.mapa.initialCoordinates.lat;
 var lonManual = CONF.mapa.initialCoordinates.lon;
 
