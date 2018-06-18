@@ -73,10 +73,11 @@ var CONF = {
 				"id" : "layerSelectorPanel",
 				"width" : 60,
 				"widthOver" : 350,
-				"height" : 60,
+				"height" : 56,
 				"heightOver" : "auto",
 				"className" : "layerSelectorPanel",
-				"nombrePanel" : "Layer Selector Panel"
+				"nombrePanel" : "Layer Selector Panel",
+				"img" : "images/layer.png"
 			},
 			"botonera" : {
 				"id" : "botonera",

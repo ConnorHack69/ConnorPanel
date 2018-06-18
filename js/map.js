@@ -362,6 +362,7 @@ map.addLayerSelectorPanel = function(){
 	var heightOverPanel = CONF.interfaz.panel.layerSelectorPanel.heightOver;
 	var classNamePanel = CONF.interfaz.panel.layerSelectorPanel.className;
 	var nombrePanel = CONF.interfaz.panel.layerSelectorPanel.nombrePanel;
+	var img = CONF.interfaz.panel.layerSelectorPanel.img;
 	map.layerSelectorPanel = new Panel(id, widthPanel, heightPanel, classNamePanel, false);
 	var panelId = map.layerSelectorPanel.id + "_panel";
 	document.getElementById(panelId).onmouseover = function() {
@@ -394,7 +395,7 @@ map.addLayerSelectorPanel = function(){
 	        parsedHeightPanel = heightPanel;
 		document.getElementById(panelId).style.height = parsedHeightPanel;
 	}
-	map.layerSelectorPanel.addTitulo(id, nombrePanel);
+	map.layerSelectorPanel.addTitulo(id, nombrePanel, img);
 	map.layerSelectorPanel.addLayerSelectorPanel(id);
 }
 
