@@ -103,6 +103,7 @@
 	<!-- Cargamos la configuración de todas las tools que queremos habilitar -->
 	<script src='js/toolsConfiguration/herramientas/herramientas.js'></script>
 	<script src='js/toolsConfiguration/reconocimiento/reconng.js'></script>
+	<script src='js/toolsConfiguration/reconocimiento/theharvester.js'></script>
 	<!--<script src='js/toolsConfiguration/metasploit/metasploit.js'></script>-->
 	<script src='js/toolsConfiguration/shell.js'></script>
 	<script src='js/telegram.js'></script>

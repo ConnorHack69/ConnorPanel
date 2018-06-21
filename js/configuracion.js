@@ -150,7 +150,12 @@ var CONF = {
 				"reconocimiento" : {
 					"nombre" : "Reconocimiento",
 					"tools" : {
-						
+						"recon-ng" : {
+
+						},
+						"theharvester" : {
+							"urlAjax" : "php/funciones/tools/theharvester/email_harvest.php"
+						}
 					}
 				},
 				"metasploit" : {

@@ -30,11 +30,23 @@ function actualizarInfoRedPanel(){
 	var textoCargandoDatos = confPanel.textoCargandoDatos;
 	var textoActualizandoDatos = confPanel.textoActualizandoDatos;
 
-	if(infoRed == "")
-		notificacion.notificar("info", "<span class='cargando'><img src='" + imagenLoading + "' class='actualizandoDatos' /></img> <blink class='textoCargando'>" + textoCargandoDatos + "</blink></span>");
-	else
-		if(!infoRed.includes("<div class=\"actualizacion\""))
-			notificacion.notificar("info", "<span class='cargando'><img src='" + imagenLoading + "' class='actualizandoDatos' /></img> <blink class='textoCargando'>" + textoActualizandoDatos + "</blink></span>");
+	if(infoRed == ""){
+		var html = "<span class='cargando'><img src='" + imagenLoading + "' class='actualizandoDatos' /></img> <blink class='textoCargando'>" + textoCargandoDatos + "</blink></span>";
+		notificacion.notificar(
+			"info", 
+	    	"actualizandoDatos", 
+	    	html
+	    )
+	} else {
+		if(!infoRed.includes("<div class=\"actualizacion\"")){
+			var html = "<span class='cargando'><img src='" + imagenLoading + "' class='actualizandoDatos' /></img> <blink class='textoCargando'>" + textoActualizandoDatos + "</blink></span>";
+			notificacion.notificar(
+				"info", 
+		    	"actualizandoDatos", 
+		    	html
+		    )
+		}
+	}
 	
 	$("." + CONF.interfaz.panel["layers"].mired["className"]).prop('disabled', true);
 }

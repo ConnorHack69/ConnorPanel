@@ -117,7 +117,7 @@ class Panel {
                 var isChild = false;
                 var checkedTextParsed = checkeds[check].innerText.split("\n")[0];
                 // If has parent, is in sources? If yes, that tell us that is a subchild
-                for(source in sources){x
+                for(source in sources){
                   if(source == parentText + "_" + checkedTextParsed){
                     isChild = true;
                   }
@@ -192,11 +192,11 @@ class Panel {
                     dataJson[dj].items.push(items[it]);
                   }
                 } else {
-                  item = {text: source.split("_")[0], iconUrl: "images/"+source.split("_")[0]+".png", items: items};
+                  item = {text: source.split("_")[0], iconUrl: "images/"+source.split("_")[0]+".png", /*expanded: true, */items: items};
                   dataJson.push(item);
                 }
             } else {
-              item = {text: source.split("_")[0], iconUrl: "images/"+source.split("_")[0]+".png", items: items};
+              item = {text: source.split("_")[0], iconUrl: "images/"+source.split("_")[0]+".png", /*expanded: true,*/ items: items};
               dataJson.push(item);
             }
           }

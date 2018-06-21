@@ -275,6 +275,8 @@ function agregarMarcadorYVolar(datos){
 		
 		if(typeof metasploit !== 'undefined')
 			metasploit.email_harvest(busqueda);
+		if(typeof theharvester !== 'undefined')
+			theharvester.email_harvest(busqueda);
 
 		// Añadimos el marcador
 		map.addMarkerToSource('markers', [lon,lat], busqueda, ip); 
