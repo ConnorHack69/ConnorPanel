@@ -28,7 +28,6 @@ class HelloRequestHandler(BaseHTTPRequestHandler):
             <body>
                 <h1>Greetings to the world</h1>
                 <p>Hello, world!</p>
-                <p>''',str(a),'''</p>
             </body>
             </html>
         ''')
