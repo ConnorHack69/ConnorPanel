@@ -1,31 +1,53 @@
 import os
+import sys
+import subprocess
 import requests
+import json
 
 class Funciones(object):
 
 	domain=''
 
-	def __init__(self):
+	def __init__(self, dominio):
 		super(Funciones, self).__init__()
 		self.root="/home/connor/InfoGathering/Yuki-Chan-The-Auto-Pentest/"
+		self.domain = dominio
 
 	def getWhoIs(self):
-		print("Cargando getWhoIs()")
-		command = "whois "+ self.domain + " >> " + self.domain + "/whois.txt"
-		print("Comando: '"+command+"'")
-		os.system(command)
+		res=[]
+		output=subprocess.Popen(['whois', self.domain], stdout=subprocess.PIPE).stdout.readlines()
+		for ou in output:
+			if "Contact Phone" in ou:
+				num=ou.split(":")
+				if num[1] != '\n':
+					parsedNum=num[1].split("\n")[0].strip().replace("."," ")
+					res.append({'phone' : parsedNum})
+		return {'whois' : res}
 
 	def getNsLookUp(self):
-		print("Cargando getNsLookUp()")
-		command = "nslookup "+ self.domain + " >> " + self.domain + "/nslookup.txt"
-		print("Comando: '"+command+"'")
-		os.system(command)
+		res=[]
+		output=subprocess.Popen(['nslookup', self.domain], stdout=subprocess.PIPE).stdout.readlines()
+		for ou in output:
+			if "Address" in ou:
+				num=ou.split(":")
+				if num[1] != '\n' and "#" not in num[1]:
+					parsedNum=num[1].split("\n")[0].strip()
+					res.append({'ip' : parsedNum})
+		return {'nslookup' : res}
 
 	def getNmap(self):
-		print("Cargando getNmap()")
-		command = "nmap -v -O "+ self.domain + " >> " + self.domain + "/nmap.txt"
-		print("Comando: '"+command+"'")
-		os.system(command)
+		res=[]
+		ports=[]
+		output=subprocess.Popen(['nmap', '-v', '-O', self.domain], stdout=subprocess.PIPE).stdout.readlines()
+		for ou in output:
+			if ou[0].isdigit():
+				ports.append({'port' : ou.replace("/", " ").replace("open","").replace("\n","")})
+			if "Running " in ou:
+				res.append({'OS' : ou.split(":")[1].replace("\n","")})
+			#if "Aggressive OS guesses" in ou:
+				#res.append({'OS_aggresive' : ou.split(":")[1]})
+		res.append({'ports' : ports})
+		return {'nmap' : res}
 
 	def getHarvest(self, buscador="all", cantidad=1000):
 		buscadores = ["Threatcrowd","crtsh","google","googleCSE","google-profiles","bing","bingapi",
@@ -33,15 +55,19 @@ class Funciones(object):
 		if buscador != "all":
 			for busc in buscadores:
 				if buscador in busc:
-					print("Cargando getHarvest("+busc+")")
-					command = self.root + "Module/theHarvester/theHarvester.py -d "+self.domain+" -l "+str(cantidad)+" -b " + busc + " >> " + self.domain + "/harvest_"+busc+".txt"
-					print("Comando: '"+command+"'")
-					os.system(command)
+					res=[]
+					output=subprocess.Popen([self.root + "Module/theHarvester/theHarvester.py", "-d", self.domain , "-l", str(cantidad), "-b", busc], stdout=subprocess.PIPE).stdout.readlines()
+					for ou in output:
+						if "@" in ou:
+							res.append({'email' : ou.replace("\n","").replace("*","").strip()})
+					return {'emailHarvest' : res}
 		else:
-			print("Cargando getHarvest()")
-			command = self.root + "Module/theHarvester/theHarvester.py -d "+self.domain+" -l "+str(cantidad)+" -b " + buscador + " >> " + self.domain + "/harvest_ALL.txt"
-			print("Comando: '"+command+"'")
-			os.system(command)
+			res=[]
+			output=subprocess.Popen([self.root + "Module/theHarvester/theHarvester.py", "-d", self.domain , "-l", str(cantidad), "-b", buscador], stdout=subprocess.PIPE).stdout.readlines()
+			for ou in output:
+				if "@" in ou:
+					res.append({'email' : ou.replace("\n","").replace("*","").strip()})
+			return {'emailHarvest' : res}
 
 	def getMetaGoofil(self):
 		print("Cargando getMetaGoofil()")
@@ -50,10 +76,15 @@ class Funciones(object):
 		os.system(command)
 
 	def getDNSRecon(self):
-		print("Cargando getDNSRecon()")
-		command = self.root + "Module/dnsrecon/dnsrecon.py -d "+ self.domain + " >> " + self.domain + "/dnsRecon.txt"
-		print("Comando: '"+command+"'")
-		os.system(command)
+		res=[]
+		output=subprocess.Popen([self.root + "Module/dnsrecon/dnsrecon.py", "-d", self.domain], stdout=subprocess.PIPE).stdout.readlines()
+		for ou in output:
+			if "Address" in ou:
+				num=ou.split(":")
+				if num[1] != '\n' and "#" not in num[1]:
+					parsedNum=num[1].split("\n")[0].strip()
+					res.append({'ip' : parsedNum})
+		return {'dnsRecon' : res}
 
 	def getDig(self):
 		print("Cargando getDig()")
@@ -193,9 +224,6 @@ class Funciones(object):
 		print("Comando: '"+command+"'")
 		os.system(command)
 
-	def setDominio(self, dominio):
-		self.domain = dominio
-
 	def getALL(self):
 		if os.geteuid() == 0:
 			os.system("mkdir -p " + self.domain)
@@ -231,16 +259,15 @@ class Funciones(object):
 		else:
 			print("No puedes ejecutar estas funciones sin privilegios de administrador")
 
-funciones = Funciones()
-funciones.setDominio("geograma.com")
-funciones.getALL()
-funciones.setDominio("google.com")
-funciones.getALL()
-funciones.setDominio("welele.es")
-funciones.getALL()
-funciones.setDominio("pp.es")
-funciones.getALL()
-funciones.setDominio("psoe.es")
-funciones.getALL()
-funciones.setDominio("marca.com")
-funciones.getALL()
+	def returnAll(self):
+		respuesta=[]
+		respuesta.append(self.getWhoIs())
+		respuesta.append(self.getNsLookUp())
+		respuesta.append(self.getNmap())
+		respuesta.append(self.getHarvest("bing"))
+		print(json.dumps(respuesta))
+
+
+if sys.argv[1]:
+	funciones = Funciones(sys.argv[1])
+	funciones.returnAll()

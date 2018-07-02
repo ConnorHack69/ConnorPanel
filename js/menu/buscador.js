@@ -278,6 +278,14 @@ function agregarMarcadorYVolar(datos){
 		if(typeof theharvester !== 'undefined')
 			theharvester.email_harvest(busqueda);
 
+		$.ajax({
+			type: "POST",
+			url: "/ConnorPanel/funciones/funciones.py",
+			data: { param : busqueda }
+		}).done(function(o) {
+			console.log(o);
+		});
+
 		// Añadimos el marcador
 		map.addMarkerToSource('markers', [lon,lat], busqueda, ip); 
 		startFlying = true;
