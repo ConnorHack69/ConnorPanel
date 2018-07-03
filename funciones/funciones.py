@@ -69,34 +69,13 @@ class Funciones(object):
 					res.append({'email' : ou.replace("\n","").replace("*","").strip()})
 			return {'emailHarvest' : res}
 
-	def getMetaGoofil(self):
-		print("Cargando getMetaGoofil()")
-		command = self.root + "Module/metagoofil/metagoofil.py -d "+self.domain+" -t doc,pdf,xls,csv,txt -l 200 -n 50 -o metagoofiles -f data.html"
-		print("Comando: '"+command+"'")
-		os.system(command)
-
-	def getDNSRecon(self):
-		res=[]
-		output=subprocess.Popen([self.root + "Module/dnsrecon/dnsrecon.py", "-d", self.domain], stdout=subprocess.PIPE).stdout.readlines()
-		for ou in output:
-			if "Address" in ou:
-				num=ou.split(":")
-				if num[1] != '\n' and "#" not in num[1]:
-					parsedNum=num[1].split("\n")[0].strip()
-					res.append({'ip' : parsedNum})
-		return {'dnsRecon' : res}
-
-	def getDig(self):
-		print("Cargando getDig()")
-		command = "dig -x "+ self.domain + " >> " + self.domain + "/dig.txt"
-		print("Comando: '"+command+"'")
-		os.system(command)
-
 	def getSublist3r(self):
-		print("Cargando getSublist3r()")
-		command = self.root + "Module/sublist3r/sublist3r.py --domain "+ self.domain + " >> " + self.domain + "/sublist3er.txt"
-		print("Comando: '"+command+"'")
-		os.system(command)
+		res=[]
+		output=subprocess.Popen([self.root + "Module/sublist3r/sublist3r.py", "--domain", self.domain], stdout=subprocess.PIPE).stdout.readlines()
+		for ou in output:
+			if "[-]" not in ou and "u001b" in ou:
+				res.append({'domain' : ou.replace("\n","").strip()})
+		return {'subdomains' : res}
 
 	def getWafW00f(self):
 		print("Cargando getWafW00f()")
@@ -265,6 +244,7 @@ class Funciones(object):
 		respuesta.append(self.getNsLookUp())
 		respuesta.append(self.getNmap())
 		respuesta.append(self.getHarvest("bing"))
+		respuesta.append(self.getSublist3r())
 		print(json.dumps(respuesta))
 
 

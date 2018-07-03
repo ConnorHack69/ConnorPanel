@@ -1,7 +1,8 @@
 $(document).ready(function() {
 
 	$('form').on('submit', function(event) {
-
+		$('#successAlert').hide();
+		$('#errorAlert').hide();
 		$.ajax({
 			data : {
 				domain : $('#domainInput').val()
