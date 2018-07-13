@@ -1,8 +1,15 @@
+# encoding=utf8  
+import sys  
+
+reload(sys)  
+sys.setdefaultencoding('utf8')
+
 import os
-import sys
 import subprocess
 import requests
 import json
+
+
 
 class Funciones(object):
 
@@ -10,19 +17,23 @@ class Funciones(object):
 
 	def __init__(self, dominio):
 		super(Funciones, self).__init__()
-		self.root="/home/connor/InfoGathering/Yuki-Chan-The-Auto-Pentest/"
+		self.root="/root/Yuki-Chan-The-Auto-Pentest/"
 		self.domain = dominio
 
 	def getWhoIs(self):
 		res=[]
 		output=subprocess.Popen(['whois', self.domain], stdout=subprocess.PIPE).stdout.readlines()
 		for ou in output:
+			if "no dispone de servidor whois" in ou:
+				res.append({"error" : "no_whois"})
 			if "Contact Phone" in ou:
 				num=ou.split(":")
 				if num[1] != '\n':
 					parsedNum=num[1].split("\n")[0].strip().replace("."," ")
-					res.append({'phone' : parsedNum})
-		return {'whois' : res}
+					res.append({"phone" : parsedNum})
+			if "Acceso restringido" in ou:
+				res.append({"error" : "Acceso restringido"})
+		return json.dumps({"whois" : res})
 
 	def getNsLookUp(self):
 		res=[]
@@ -32,8 +43,8 @@ class Funciones(object):
 				num=ou.split(":")
 				if num[1] != '\n' and "#" not in num[1]:
 					parsedNum=num[1].split("\n")[0].strip()
-					res.append({'ip' : parsedNum})
-		return {'nslookup' : res}
+					res.append({"ip" : parsedNum})
+		return json.dumps({"nslookup" : res})
 
 	def getNmap(self):
 		res=[]
@@ -41,17 +52,22 @@ class Funciones(object):
 		output=subprocess.Popen(['nmap', '-v', '-O', self.domain], stdout=subprocess.PIPE).stdout.readlines()
 		for ou in output:
 			if ou[0].isdigit():
-				ports.append({'port' : ou.replace("/", " ").replace("open","").replace("\n","")})
+				ports.append({"port" : ou.replace("/", " ").replace("open","").replace("\n","")})
 			if "Running " in ou:
-				res.append({'OS' : ou.split(":")[1].replace("\n","")})
+				res.append({"OS" : ou.split(":")[1].replace("\n","")})
 			#if "Aggressive OS guesses" in ou:
 				#res.append({'OS_aggresive' : ou.split(":")[1]})
-		res.append({'ports' : ports})
-		return {'nmap' : res}
+		res.append({"ports" : ports})
+		return json.dumps({"nmap" : res})
 
 	def getHarvest(self, buscador="all", cantidad=1000):
+		# Permisos modulo
+		permisos = "sudo chmod 755 " + self.root + "Module/theHarvester/theHarvester.py"
+		os.system(permisos)
+
 		buscadores = ["Threatcrowd","crtsh","google","googleCSE","google-profiles","bing","bingapi",
 						"dogpile","pgp","linkedin","vhost","twitter","googleplus","yahoo","baidu","shodan"]
+
 		if buscador != "all":
 			for busc in buscadores:
 				if buscador in busc:
@@ -59,71 +75,150 @@ class Funciones(object):
 					output=subprocess.Popen([self.root + "Module/theHarvester/theHarvester.py", "-d", self.domain , "-l", str(cantidad), "-b", busc], stdout=subprocess.PIPE).stdout.readlines()
 					for ou in output:
 						if "@" in ou:
-							res.append({'email' : ou.replace("\n","").replace("*","").strip()})
-					return {'emailHarvest' : res}
+							res.append({"email" : ou.replace("\n","").replace("*","").strip()})
+					return json.dumps({"emailHarvest" : res})
 		else:
 			res=[]
 			output=subprocess.Popen([self.root + "Module/theHarvester/theHarvester.py", "-d", self.domain , "-l", str(cantidad), "-b", buscador], stdout=subprocess.PIPE).stdout.readlines()
 			for ou in output:
 				if "@" in ou:
-					res.append({'email' : ou.replace("\n","").replace("*","").strip()})
-			return {'emailHarvest' : res}
+					res.append({"email" : ou.replace("\n","").replace("*","").strip()})
+			return json.dumps({"emailHarvest" : res})
 
 	def getSublist3r(self):
+		# Permisos modulo
+		permisos = "sudo chmod 755 " + self.root + "Module/sublist3r/sublist3r.py"
+		os.system(permisos)
+
 		res=[]
 		output=subprocess.Popen([self.root + "Module/sublist3r/sublist3r.py", "--domain", self.domain], stdout=subprocess.PIPE).stdout.readlines()
+		encontrado=False
 		for ou in output:
-			if "[-]" not in ou and "u001b" in ou:
-				res.append({'domain' : ou.replace("\n","").strip()})
-		return {'subdomains' : res}
+			if "[-]" not in ou and self.domain in ou:
+				encontrado=True
+				res.append({"domain" : ou.replace("\n","").split(self.domain)[0].split("92m")[1].strip() + str(self.domain)})
+		if not encontrado:
+			res.append({"error" : "No se han encontrado subdominios"})
+		return json.dumps({"subdomains_" + str(self.domain) : res})
 
 	def getWafW00f(self):
-		print("Cargando getWafW00f()")
-		command = "wafw00f http://"+ self.domain + " >> " + self.domain + "/wafw00f.txt"
-		print("Comando: '"+command+"'")
-		os.system(command)
-
-	def getFullInfoGath(self):
-		print("Cargando getFullInfoGath()")
-		command = self.root + "./wafninja bypass -u 'http://" + self.domain + "/index.php' -p 'Name=PAYLOAD&Submit=Submit' -c 'phpsessid=value' -t xss -o output.html"
-		print("Comando: '"+command+"'")
-		os.system(command)
+		res=[]
+		output=subprocess.Popen(['wafw00f', self.domain], stdout=subprocess.PIPE).stdout.readlines()
+		for ou in output:
+			if "No WAF detected" in ou:
+				res.append({"WAF" : "false"})
+			if "seems to be behind a WAF" in ou:
+				res.append({"WAF" : "true"})
+			if "is behind a" in ou:
+				res.append({"firewall" : ou.split("is behind a")[1].replace("\n","").strip()})
+			if "a normal response is" in ou:
+				res.append({"header_normal" : ou.split("a normal response is")[1].split(",")[0].replace('\"',"").replace("\n","").strip()})
+			if "a response to an attack is" in ou:
+				res.append({"header_attacker" : ou.split("a response to an attack is")[1].split(",")[0].replace('\"',"").replace("\n","").strip()})
+		return json.dumps({"wafw00f" : res})
 		
 	def getXSS(self):
-		print("Cargando getXSS()")
-		command = self.root + "Module/XssPy.py -u " + self.domain+  " -v" + " >> " + self.domain + "/xss.txt"
-		print("Comando: '"+command+"'")
-		os.system(command)
+		# Permisos modulo
+		permisos = "sudo chmod 755 " + self.root + "Module/XssPy.py"
+		os.system(permisos)
+
+		res=[]
+		vulnerables=False
+		try:
+			output=subprocess.Popen(["sh", self.root + "Module/XssPy.py", "-u", self.domain], stdout=subprocess.PIPE).stdout.readlines()
+			for ou in output:
+				if "No link found" in ou:
+					res.append({"xss" : "false"})
+				if "Vulnerable" in ou and "found" in ou:
+					vulnerables=True
+
+			if vulnerables:
+				res.append({"links" : "Hay links vulnerables"})
+			else:
+				res.append({"links" : "NO hay links vulnerables"})
+		except:
+			res.append({"links" : "NO hay links vulnerables"})
+		return json.dumps({"xss" : res})
 		
 	def getWhatWeb(self):
-		print("Cargando getWhatWeb()")
-		command = self.root + "Module/WhatWeb/whatweb " + self.domain + " >> " + self.domain + "/whatWeb.txt"
-		print("Comando: '"+command+"'")
-		os.system(command)
+		# Permisos modulo
+		permisos = "sudo chmod 755 " + self.root + "Module/WhatWeb/whatweb"
+		os.system(permisos)
+
+		res=[]
+		output=subprocess.Popen([self.root + "Module/WhatWeb/whatweb", self.domain], stdout=subprocess.PIPE).stdout.readlines()
+		hasTitle=False
+		for ou in output:
+			if "Title" in ou and not "Forbidden" in ou and not "301 Moved" in ou:
+				hasTitle=True
+				titulo=ou.split("Title")[1].split("33m")[1].split("]")[0].split("\\")[0].strip()
+				if "\xc3\xb1" in ou:
+					titulo=titulo.replace("\xc3\xb1", "ñ").decode("utf-8")
+				if "\x1b" in ou:
+					titulo=titulo.split("\x1b")[0]
+				res.append({"titulo" : titulo})
+		if not hasTitle:
+			res.append({"titulo" : "No se ha encontrado el titulo del dominio"})
+		return json.dumps({"whatWeb" : res})
 		
 	def getSpaghetti(self):
-		print("Cargando getSpaghetti()")
-		command = self.root + "Module/Spaghetti/spaghetti.py --url http://"+self.domain+" --scan [0-3]" + " >> " + self.domain + "/spaghetti.txt"
-		print("Comando: '"+command+"'")
-		os.system(command)
+		# Permisos modulo
+		permisos = "sudo chmod 755 " + self.root + "Module/Spaghetti/spaghetti.py"
+		os.system(permisos)
+
+		res=[]
+		output=subprocess.Popen([self.root + "Module/Spaghetti/spaghetti.py", "--url", "http://"+self.domain,  "--scan", "[0-3]"], stdout=subprocess.PIPE).stdout.readlines()
+		for ou in output:
+			if "Language" in ou:
+				language=r""+ou.split(":")[1].strip()
+				res.append({"language" : language.replace("\x1b[0m", "")})
+			if "CMS" in ou:
+				res.append({"CMS" : ou.split(":")[1].replace("\x1b[0m", "").strip()})
+			if "Server" in ou:
+				res.append({"server" : ou.split(":")[1].replace("\x1b[0m", "").strip()})
+		return json.dumps({"spaghetti" : res})
 		
 	def getWpscan(self):
-		print("Cargando getWpscan()")
-		command = "wpscan --url http://" + self.domain + " --enumerate u" + " >> " + self.domain + "/wpscan.txt"
-		print("Comando: '"+command+"'")
-		os.system(command)
+		res=[]
+		output=subprocess.Popen("echo Y | wpscan --url http://"+self.domain+ " --enumerate u", shell=True, stdout=subprocess.PIPE).stdout.readlines()
+		encontrado=False
+		for ou in output:
+			if "Memory used" in ou or "Interesting entry from robots.txt" in ou or "WordPress theme in use" in ou:
+				encontrado=True
+				res.append({"scan" : ou.split(":")[1].strip()})
+		if not encontrado:
+			res.append({"scan" : "No se ha podido escanear el servicio WP"})
+		return json.dumps({"wpscan" : res})
 		
 	def getWpscanner(self):
-		print("Cargando getWpscanner()")
-		command = self.root + "Module/wpscanner.py -s http://" + self.domain + " -n 20" + " >> " + self.domain + "/wpscanner.txt"
-		print("Comando: '"+command+"'")
-		os.system(command)
+		# Permisos modulo
+		permisos = "sudo chmod 755 " + self.root + "Module/wpscanner.py"
+		os.system(permisos)
+
+		res=[]
+		output=subprocess.Popen([self.root + "Module/wpscanner.py", "-s", "http://"+self.domain,  "-n", "20"], stdout=subprocess.PIPE).stdout.readlines()
+		encontrado=False
+		for ou in output:
+			if "|" in ou and encontrado:
+				res.append({"wps" : {ou.replace("\n","").split("|")[2].strip():ou.replace("\n","").split("|")[3].split(" ")[1].strip()}})
+			if "Login" in ou and "Name" in ou:
+				encontrado=True
+			if "Could not find anything" in ou:
+				res.append({"wps" : 'no_wpscanner'})
+		return json.dumps({"wpscanner" : res})
 		
 	def getWordPress(self):
-		print("Cargando getWordPress()")
-		command = "droopescan scan wordpress -u http://" + self.domain + " >> " + self.domain + "/wordpress.txt"
-		print("Comando: '"+command+"'")
-		os.system(command)
+		res=[]
+		output=subprocess.Popen("droopescan scan wordpress -u http://" + self.domain, shell=True, stdout=subprocess.PIPE).stdout.readlines()
+		hayPlugins=False
+		for ou in output:
+			if "default changelog" in ou:
+				res.append({"changelog" : ou})
+			if hayPlugins in ou:
+				res.append({ou.split(" ")[0] : ou.split(" ")[1].replace("\n","")})
+			if "Plugins found" in ou:
+				hayPlugins=True
+		return json.dumps({"wordpress" : res})
 		
 	def getWPSeku(self):
 		print("Cargando getWPSeku()")
@@ -212,7 +307,7 @@ class Funciones(object):
 			self.getHarvest()
 			#self.getMetaGoofil()
 			#self.getDNSRecon()
-			self.getDig()
+			#self.getDig()
 			self.getSublist3r()
 			self.getWafW00f()
 			#self.getFullInfoGath()
@@ -245,9 +340,58 @@ class Funciones(object):
 		respuesta.append(self.getNmap())
 		respuesta.append(self.getHarvest("bing"))
 		respuesta.append(self.getSublist3r())
+		respuesta.append(self.getWafW00f())
+		respuesta.append(self.getWhatWeb())
+		respuesta.append(self.getSpaghetti())
+		respuesta.append(self.getWpscan())
+		respuesta.append(self.getWpscanner())
 		print(json.dumps(respuesta))
-
 
 if sys.argv[1]:
 	funciones = Funciones(sys.argv[1])
-	funciones.returnAll()
+	if len(sys.argv) == 3:
+		if sys.argv[2]:
+			if sys.argv[2] == "getWhoIs":
+				print(funciones.getWhoIs())
+			elif sys.argv[2] == "getNsLookUp":
+				print(funciones.getNsLookUp())
+			elif sys.argv[2] == "getNmap":
+				print(funciones.getNmap())
+			elif sys.argv[2] == "getHarvest":
+				print(funciones.getHarvest())
+			elif sys.argv[2] == "getSublist3r":
+				print(funciones.getSublist3r())
+			elif sys.argv[2] == "getWafW00f":
+				print(funciones.getWafW00f())
+			elif sys.argv[2] == "getXSS":
+				print(funciones.getXSS())
+			elif sys.argv[2] == "getWhatWeb":
+				print(funciones.getWhatWeb())
+			elif sys.argv[2] == "getSpaghetti":
+				print(funciones.getSpaghetti())
+			elif sys.argv[2] == "getWpscan":
+				print(funciones.getWpscan())
+			elif sys.argv[2] == "getWpscanner":
+				print(funciones.getWpscanner())
+			elif sys.argv[2] == "getSilverStripe":
+				print(funciones.getSilverStripe())
+			elif sys.argv[2] == "getMoodle":
+				print(funciones.getMoodle())
+			elif sys.argv[2] == "getSSLScan":
+				print(funciones.getSSLScan())
+			elif sys.argv[2] == "getSSLyze":
+				print(funciones.getSSLyze())
+			elif sys.argv[2] == "getA2SVu":
+				print(funciones.getA2SVu())
+			elif sys.argv[2] == "getA2SVt":
+				print(funciones.getA2SVt())
+			elif sys.argv[2] == "getDirSearchPHP":
+				print(funciones.getDirSearchPHP())
+			elif sys.argv[2] == "getDirSearchASP":
+				print(funciones.getDirSearchASP())
+			else:
+				funciones.returnAll()
+		else:
+			funciones.returnAll()
+	else:
+		funciones.returnAll()

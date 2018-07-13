@@ -15,16 +15,30 @@
 <body>
 <div class="container">
 	<br><br><br><br>
-	<form class="form-inline">
-	  <div class="form-group">
-	    <label class="sr-only" for="domainInput">Dominio</label>
-	    <input type="text" class="form-control" id="domainInput" placeholder="dominio.com">
-	  </div>
-	  <button type="submit" class="btn btn-default">Escanear</button>
+	<form class="form-inline" id="formInfoGath">
+	  	<div class="form-group">
+		    <label class="sr-only" for="domainInput">Dominio</label>
+		    <input type="text" class="form-control" id="domainInput" placeholder="dominio.com">
+	  	</div>
+		</br>
+		<input type="radio" name="metodo" value="all" id="method_ALL" checked> ALL &nbsp (tarda mucho) <br>
+		<input type="radio" name="metodo" value="getWhoIs" id="method_whois"> WhoIs <br>
+		<input type="radio" name="metodo" value="getNsLookUp" id="method_nslookup"> NsLookUp <br>
+		<input type="radio" name="metodo" value="getNmap" id="method_nmap"> Nmap <br>
+		<input type="radio" name="metodo" value="getHarvest" id="method_harvest"> Harvest <br>
+		<input type="radio" name="metodo" value="getSublist3r" id="method_sublister"> Sublist3r <br>
+		<input type="radio" name="metodo" value="getWafW00f" id="method_wafwoof"> WafW00f <br>
+		<input type="radio" name="metodo" value="getXSS" id="method_xss"> XSS &nbsp (proceso lento) <br>
+		<input type="radio" name="metodo" value="getWhatWeb" id="method_whatweb"> WhatWeb <br>
+		<input type="radio" name="metodo" value="getSpaghetti" id="method_spaghetti"> Spaghetti <br>
+		<input type="radio" name="metodo" value="getWpscan" id="method_wpscan"> Wpscan <br>
+		<input type="radio" name="metodo" value="getWpscanner" id="method_wpscanner"> Wpscanner <br>
+	  	<button type="submit" class="btn btn-default">Escanear</button>
 	</form>
 	<br>
 	<div id="successAlert" class="alert alert-success" role="alert" style="display:none;"></div>
 	<div id="errorAlert" class="alert alert-danger" role="alert" style="display:none;"></div>
+	<div id="infoAlert" class="alert alert-info" role="alert" style="display:none;"></div>
 </div>
 </body>
 </html>

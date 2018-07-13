@@ -17,6 +17,9 @@ var CONF = {
 			"minimizar" : {
 				"imagen" : "images/minimizar.png"
 			}
+		},
+		"servicioPython" : {
+			"metodoPredefinido" : "all"
 		}
 	},
 	"mapa" : {

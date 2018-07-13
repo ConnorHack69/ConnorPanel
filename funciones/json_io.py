@@ -13,15 +13,19 @@ def index():
 def process():
 
 	domain = request.form['domain']
+	metodo = request.form['metodo']
+
+	if metodo == "all":
+		metodo=""
 
 	if domain != '':
-		some_command = "echo '001FAF7C6677' | sudo -S python /var/www/html/ConnorPanel/funciones/funciones.py " + str(domain)
+		some_command = "echo '001FAF7C6677' | sudo -S python /var/www/html/ConnorPanel/funciones/funciones.py " + str(domain) + " " + metodo
 		p = subprocess.Popen(some_command, stdout=subprocess.PIPE, shell=True)
 		(output, err) = p.communicate()
 		p_status = p.wait()
-		return jsonify({'domain' : output})
+		return jsonify({"domain" : output})
 	else:
-		return jsonify({'error' : 'Falta el dominio!'})
+		return jsonify({"error" : "Falta el dominio!"})
 
 if __name__ == '__main__':
-	app.run(debug=True)
+	app.run(debug=True, threaded=True)
