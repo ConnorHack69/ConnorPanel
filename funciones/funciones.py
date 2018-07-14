@@ -31,6 +31,14 @@ class Funciones(object):
 				if num[1] != '\n':
 					parsedNum=num[1].split("\n")[0].strip().replace("."," ")
 					res.append({"phone" : parsedNum})
+			if "Province" in ou:
+				prov = ou.split(":")[1].replace("\n","").strip()
+				if prov:
+					res.append({'province' : prov})
+			if "Tech City" in ou:
+				city = ou.split(":")[1].replace("\n","").strip()
+				if city:
+					res.append({'city' : city})
 			if "Acceso restringido" in ou:
 				res.append({"error" : "Acceso restringido"})
 		return json.dumps({"whois" : res})
