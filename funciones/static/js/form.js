@@ -29,23 +29,23 @@ $(document).ready(function() {
 			dataType: 'json'
 		})
 		.done(function(data) {
-
 			if (data.error) {
 				$('#errorAlert').text(data.error).show();
 				$('#successAlert').hide();
 				$('#infoAlert').hide();
-			}
-			else {
+			} else {
 				$('#successAlert').text($('#successAlert').text() + data.domain).show();
 				datos = JSON.parse(data.domain.split("\n")[0]);
+				
+				// Subdominios?
 				if(datos["subdomains_"+dominio])
 					for(subDom in datos["subdomains_"+dominio])
 						if(datos["subdomains_"+dominio][subDom]["domain"] != "")
 							callPython(datos["subdomains_"+dominio][subDom]["domain"], metodo)
+
 				$('#errorAlert').hide();
 				$('#infoAlert').hide();
 			}
-
 		});
 	}
 });

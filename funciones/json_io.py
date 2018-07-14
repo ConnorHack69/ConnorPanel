@@ -11,7 +11,6 @@ def index():
 
 @app.route('/process', methods=['POST'])
 def process():
-
 	domain = request.form['domain']
 	metodo = request.form['metodo']
 

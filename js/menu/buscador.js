@@ -12,6 +12,9 @@ var busquedaPorVoz = false;
 var expEsDominio = CONF.interfaz.panel.buscador.expresiones.esDominio;
 var expEsIp = CONF.interfaz.panel.buscador.expresiones.esIp;
 
+var datos = [];
+var buscando = false;
+
 // Cambia la anchura del campo de busqueda cada vez que se cambia su contenido
 $("#buscador").on('change', actualizarTamañoBuscador());
 
@@ -28,6 +31,7 @@ function buscarDominio(busqueda){
 		buscadorInput.addClass("cargandoBuscador");
 		buscadorInput.attr('readonly', true);
 		lastSearch = busqueda;
+		buscando = false;
 	}
 	$.ajax ({ 
 		url: CONF.interfaz.panel.buscador.buscarDominioIP.urlAjax,
@@ -81,12 +85,14 @@ function buscar() {
 	var busqueda = buscadorInput.val();
 	actualizarTamañoBuscador();
 	
-	if(busqueda.length > 3){
+	if(busqueda.length > 3 && !buscando){
 		switch (true) {
 		    case expEsDominio.test(busqueda): 		// Busqueda DOMINIO
+		    	buscando = true;
 				buscarDominio(busqueda);
 				break;
 		    case expEsIp.test(busqueda):			// Busqueda IP
+		    	buscando = true;
 				buscarIP(busqueda);
 				break;
 		    default:								// Default
@@ -279,7 +285,13 @@ function agregarMarcadorYVolar(datos){
 			theharvester.email_harvest(busqueda);
 
 		metodoPython = CONF.core.servicioPython.metodoPredefinido;
-		servicioPython(busqueda, metodoPython);
+		if(metodoPython == 'all'){
+			metodos = ["getWhoIs","getNsLookUp","getNmap","getHarvest","getSublist3r","getWafW00f","getWhatWeb","getSpaghetti","getWpscan","getWpscanner"];
+			for(m in metodos)
+				servicioPython(busqueda, metodos[m])
+		} else {
+			servicioPython(busqueda, metodoPython)
+		}
 
 		// Añadimos el marcador
 		map.addMarkerToSource('markers', [lon,lat], busqueda, ip); 
@@ -307,41 +319,29 @@ function agregarMarcadorYVolar(datos){
 // Llamada al servicio hosteado en localhost:5000
 function servicioPython(dominio, metodo){
 	$.ajax({
-		data : {
+	    type:"POST",
+	    dataType: "json",
+	    data:{
 			domain : dominio,
 			metodo : metodo
 		},
-		type : 'POST',
-		url : 'http://localhost:5000/process',
-		dataType: 'json'
+	    url: "http://localhost:5000/process",
+	    success: function(data){
+	    	if(!datos[dominio])
+	    		datos[dominio] = [];
+	    	datos[dominio].push(JSON.parse(data.domain));
+	        console.log(datos);
+	    }
 	})
-	.done(function(data) {
-
-		if (data.error) {
-			console.log(data.error);
-			/*$('#errorAlert').text(data.error).show();
-			$('#successAlert').hide();
-			$('#infoAlert').hide();*/
-		}
-		else {
-			//$('#successAlert').text($('#successAlert').text() + data.domain).show();
-			datos = JSON.parse(data.domain.split("\n")[0]);
-			if(datos["subdomains_"+dominio])
-				for(subDom in datos["subdomains_"+dominio])
-					if(datos["subdomains_"+dominio][subDom]["domain"] != "")
-						callPython(datos["subdomains_"+dominio][subDom]["domain"], metodo)
-			/*$('#errorAlert').hide();
-			$('#infoAlert').hide();*/
-		}
-	});
 }
 
 // Pasamos el dominio y la ip para resolver el LonLat y acto seguido, volamos alli
 function getLonLatFromIP(ip,busqueda){
 	if(expEsIp.test(ip)){
+		api = CONF.interfaz.panel.buscador.getLonLatFromIP.api;
 		$.ajax ({ 
 			url: CONF.interfaz.panel.buscador.getLonLatFromIP.urlAjax,
-			data: {ip: ip},
+			data: {api : api, ip: ip},
 			type: 'post',
 			success : function (responseData) {
 				var datos = responseData.split(",");

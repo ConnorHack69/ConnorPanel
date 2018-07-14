@@ -63,6 +63,7 @@ var CONF = {
 					"errorAjaxDesc" : "No se ha podido encontrar el Dominio de la IP indicada."
 				},
 				"getLonLatFromIP" : {
+					"api" : "95c581508ac1254b71263f41f1cd13e2",
 					"urlAjax" : "php/getLonLatFromIP.php",
 					"errorAjax" : "Fallo encontrando LonLat!",
 					"errorAjaxDesc" : "No se ha podido encontrar el LonLat de la busqueda."
