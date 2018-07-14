@@ -18,27 +18,27 @@
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-	<link href="https://unpkg.com/leaflet@1.3.1/dist/leaflet.css" rel="stylesheet" />
-	<script src="https://unpkg.com/leaflet@1.3.1/dist/leaflet.js"></script>
+	<link href="css/lib/leaflet.css" rel="stylesheet" />
+	<script src="js/lib/leaflet.js"></script>
 	
-	<script src='https://api.mapbox.com/mapbox.js/v3.0.1/mapbox.js'></script>
-  <link href='https://api.mapbox.com/mapbox.js/v3.0.1/mapbox.css' rel='stylesheet' />
+	<script src='js/lib/mapbox.js'></script>
+  	<link href='css/lib/mapbox.css' rel='stylesheet' />
 
-	<script src='https://api.mapbox.com/mapbox-gl-js/v0.44.2/mapbox-gl.js'></script>
-	<link href='https://api.mapbox.com/mapbox-gl-js/v0.44.2/mapbox-gl.css' rel='stylesheet' />
+	<script src='js/lib/mapbox-gl.js'></script>
+	<link href='css/lib/mapbox-gl.css' rel='stylesheet' />
 
   	
-  	<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-  	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  	<script src="js/lib/jquery-1.12.4.js"></script>
+  	<script src="js/lib/jquery-ui.js"></script>
 
-	<script src='https://api.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v1.0.0/leaflet.markercluster.js'></script>
-	<link href='https://api.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v1.0.0/MarkerCluster.css' rel='stylesheet' />
-	<link href='https://api.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v1.0.0/MarkerCluster.Default.css' rel='stylesheet' />
+	<script src='js/lib/leaflet.markercluster.js'></script>
+	<link href='css/lib/MarkerCluster.css' rel='stylesheet' />
+	<link href='css/lib/MarkerCluster.Default.css' rel='stylesheet' />
 
-    <link id="themecss" rel="stylesheet" type="text/css" href="//www.shieldui.com/shared/components/latest/css/light/all.min.css" />
-    <script type="text/javascript" src="//www.shieldui.com/shared/components/latest/js/shieldui-all.min.js"></script>
+    <link id="themecss" rel="stylesheet" type="text/css" href="css/lib/all.min.css" />
+    <script type="text/javascript" src="js/lib/shieldui-all.min.js"></script>
 	
-	<script src="http://code.responsivevoice.org/responsivevoice.js"></script>
+	<script src="js/lib/responsivevoice.js"></script>
 	
 	<script> window.intergramId = "323409446"
 	    window.intergramCustomizations = {
@@ -51,7 +51,7 @@
 	        alwaysUseFloatingButton: false // Use the mobile floating button also on large screens
 	    };
     </script>
-	<script id="intergram" type="text/javascript" src="https://www.intergram.xyz/js/widget.js"></script>
+	<script id="intergram" type="text/javascript" src="js/lib/intergramwidget.js"></script>
 
 	<script src='js/togeojson.js'></script>
 
@@ -103,7 +103,7 @@
 	<!-- Cargamos la configuración de todas las tools que queremos habilitar -->
 	<script src='js/toolsConfiguration/herramientas/herramientas.js'></script>
 	<script src='js/toolsConfiguration/reconocimiento/reconng.js'></script>
-	<script src='js/toolsConfiguration/reconocimiento/theharvester.js'></script>
+	<!--<script src='js/toolsConfiguration/reconocimiento/theharvester.js'></script>-->
 	<!--<script src='js/toolsConfiguration/metasploit/metasploit.js'></script>-->
 	<script src='js/toolsConfiguration/shell.js'></script>
 	<script src='js/telegram.js'></script>

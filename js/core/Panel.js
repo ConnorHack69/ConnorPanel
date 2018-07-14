@@ -175,7 +175,7 @@ class Panel {
                   }
                 }
                 if(!exists)
-                  items.push({text: nombreLayer, iconUrl: "images/"+source.split("_")[0]+".png"});
+                  items.push({text: nombreLayer, iconUrl: "images/layers/"+source.split("_")[0]+".png"});
               }
             }
             var sourceName = source.split("_")[0];
@@ -192,11 +192,11 @@ class Panel {
                     dataJson[dj].items.push(items[it]);
                   }
                 } else {
-                  item = {text: source.split("_")[0], iconUrl: "images/"+source.split("_")[0]+".png", /*expanded: true, */items: items};
+                  item = {text: source.split("_")[0], iconUrl: "images/layers/"+source.split("_")[0]+".png", /*expanded: true, */items: items};
                   dataJson.push(item);
                 }
             } else {
-              item = {text: source.split("_")[0], iconUrl: "images/"+source.split("_")[0]+".png", /*expanded: true,*/ items: items};
+              item = {text: source.split("_")[0], iconUrl: "images/layers/"+source.split("_")[0]+".png", /*expanded: true,*/ items: items};
               dataJson.push(item);
             }
           }
@@ -214,7 +214,7 @@ class Panel {
                 data: [
                     {
                         text: "GeoJSON",
-                        iconUrl: "images/GEOJSON.png",
+                        iconUrl: "images/layers/GEOJSON.png",
                         expanded: true,
                         items: dataJson
                     }

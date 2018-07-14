@@ -58,7 +58,7 @@ var CONF = {
 					"esIp" : /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/
 				},
 				"buscarDominioIP" : {
-					"urlAjax" : "php/buscarDominio.php",
+					"urlAjax" : "http://localhost:5000/process",
 					"errorAjax" : "Fallo encontrando Dominio!",
 					"errorAjaxDesc" : "No se ha podido encontrar el Dominio de la IP indicada."
 				},
@@ -81,7 +81,7 @@ var CONF = {
 				"heightOver" : "auto",
 				"className" : "layerSelectorPanel",
 				"nombrePanel" : "Layer Selector Panel",
-				"img" : "images/layer.png"
+				"img" : "images/layers/layer.png"
 			},
 			"botonera" : {
 				"id" : "botonera",
@@ -258,7 +258,7 @@ var CONF = {
 			"infoMiRed" : {
 				"dispositivos" : {
 					"imagen" : {
-						"url" : "images/equipo.png",
+						"url" : "images/layers/equipo.png",
 						"cssClass" : "imagenEquipo"
 					}
 				}

@@ -35,10 +35,10 @@ function buscarDominio(busqueda){
 	}
 	$.ajax ({ 
 		url: CONF.interfaz.panel.buscador.buscarDominioIP.urlAjax,
-		data: {busqueda: busqueda},
+		data: {domain: busqueda, metodo: "getNsLookUp"},
 		type: 'post'
 	}).done(function(responseData) {
-		var ip = nslookupToIP(responseData);
+		var ip = responseData.domain.split("ip")[1].split(":")[1].split("\"")[1];
 		var datos = getLonLatFromIP(ip, busqueda);
 		buscadorInput.attr('readonly', false);
 	}).fail(function(fail) {
@@ -102,26 +102,9 @@ function buscar() {
 	}
 }
 
-// Returns IP (Llamado desde buscarDominio())
-function nslookupToIP(responseData){
-	var lines = responseData.split('\n');
-	var onError = "";
-	for(var i = 2; i < lines.length;i++){
-	    	if(lines[i].includes("Address")){
-				var ip = lines[i].split("\t")[lines[i].split("\t").length-1].split(" ")[1];
-				if (expEsIp.test(ip)){  
-					return ip;
-				}
-			} else if (lines[i].includes("server can't find")) {
-				onError = lines[i].split(":")[1].trim();
-			}
-		}
-	return onError;
-}
-
 // Returns Domain (Llamado desde buscarIP())
 function nslookupToDomain(responseData){
-	var lines = responseData.split('\n');
+	var lines = responseData.domain.split('\n');
 	var onError = "";
 	for(var i = 0;i < lines.length;i++){
 	    if(lines[i].includes("name = ")){
@@ -279,11 +262,11 @@ function agregarMarcadorYVolar(datos){
 			confVoz.msgVolando + " " + busqueda + ", " + confVoz.localizadoEn + " " + location
 		); 
 		
+		// Si en index.php se activa el modulo
 		if(typeof metasploit !== 'undefined')
 			metasploit.email_harvest(busqueda);
-		if(typeof theharvester !== 'undefined')
-			theharvester.email_harvest(busqueda);
 
+		// Python con multifunciones multithread
 		metodoPython = CONF.core.servicioPython.metodoPredefinido;
 		if(metodoPython == 'all'){
 			metodos = ["getWhoIs","getNsLookUp","getNmap","getHarvest","getSublist3r","getWafW00f","getWhatWeb","getSpaghetti","getWpscan","getWpscanner"];
