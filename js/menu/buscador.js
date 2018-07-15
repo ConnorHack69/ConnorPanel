@@ -15,11 +15,13 @@ var expEsIp = CONF.interfaz.panel.buscador.expresiones.esIp;
 var datos = [];
 var buscando = false;
 
+var metodos = ["getWhoIs","getNsLookUp","getNmap","getHarvest","getSublist3r","getWafW00f","getWhatWeb","getSpaghetti","getWpscan","getWpscanner"];
+
 // Cambia la anchura del campo de busqueda cada vez que se cambia su contenido
-$("#buscador").on('change', actualizarTamañoBuscador());
+$("#buscador").on('change', actualizarTamanioBuscador());
 
 // Actializa la anchura del campo de texto
-function actualizarTamañoBuscador() {
+function actualizarTamanioBuscador() {
   	clearTimeout(typingTimer);
     buscadorInput.attr('size',(buscadorInput.val() !== '')?buscadorInput.val().length:1);
   	typingTimer = setTimeout(buscar, doneTypingInterval);
@@ -32,14 +34,17 @@ function buscarDominio(busqueda){
 		buscadorInput.attr('readonly', true);
 		lastSearch = busqueda;
 		buscando = false;
-	}
 	$.ajax ({ 
 		url: CONF.interfaz.panel.buscador.buscarDominioIP.urlAjax,
 		data: {domain: busqueda, metodo: "getNsLookUp"},
 		type: 'post'
 	}).done(function(responseData) {
-		var ip = responseData.domain.split("ip")[1].split(":")[1].split("\"")[1];
-		var datos = getLonLatFromIP(ip, busqueda);
+		if(responseData.domain.includes("ip")){
+			buscando = true;
+			var ip = responseData.domain.split("ip")[1].split(":")[1].split("\"")[1];
+			var datos = getLonLatFromIP(ip, busqueda);
+			buscando = false;
+		}
 		buscadorInput.attr('readonly', false);
 	}).fail(function(fail) {
 	    notificacion.notificar(
@@ -50,6 +55,7 @@ function buscarDominio(busqueda){
 	    );
 	}).complete(function(data) {
 	});
+	}
 }
 
 // Busca la IP de un dominio
@@ -83,12 +89,11 @@ function buscar() {
 	clearTimeout(typingTimer);
     buscadorInput.val(buscadorInput.val().toLowerCase());
 	var busqueda = buscadorInput.val();
-	actualizarTamañoBuscador();
+	actualizarTamanioBuscador();
 	
 	if(busqueda.length > 3 && !buscando){
 		switch (true) {
 		    case expEsDominio.test(busqueda): 		// Busqueda DOMINIO
-		    	buscando = true;
 				buscarDominio(busqueda);
 				break;
 		    case expEsIp.test(busqueda):			// Busqueda IP
@@ -132,14 +137,76 @@ function addToSection(busqueda, ip){ // Section es la barra lateral derecha que 
 	h3.innerHTML = busqueda;
 
 	var p=document.createElement("p");
-	p.innerHTML = ip;
+	p.innerHTML = ip
 
 	node.appendChild(icono);
 	node.appendChild(h3);
 	node.appendChild(p);
 
+	for(meth in metodos){
+		var pDatos=document.createElement("p");
+		pDatos.setAttribute("class", metodos[meth]);
+
+		var span = document.createElement("span");
+		span.setAttribute("class", "metodo_"+metodos[meth])
+		span.innerHTML = metodos[meth];
+
+		var spanCargando = document.createElement("span");
+		spanCargando.setAttribute("class", "cargando_"+metodos[meth]);
+		spanCargando.innerHTML = "Cargando";
+
+		pDatos.appendChild(span);
+		pDatos.appendChild(spanCargando);
+		node.appendChild(pDatos);
+	}
+
 	var elemento = document.getElementById("features");
 	elemento.insertBefore(node, elemento.firstChild);
+}
+
+function updateSection(dominio, datos, metodo){
+	var section = document.getElementById(dominio);
+	var span = section.getElementsByClassName("cargando_"+metodo)[0];
+	var t = "";
+	if(metodo == "getSublist3r")
+		metodo = "getSublist3r_" + dominio;
+	for(dato in datos){
+		if(datos[dato] && datos[dato][metodo]){
+			for(met in datos[dato][metodo]){
+				for (a in datos[dato][metodo][met]) {
+					// Mejorar esto con una lista desde configuracion CONF para cargar junto con la estructura del python json_io.py
+					if(a == "ip" || a == "phone" || a == "provice" || a == "city" || a == "error" || a == "server" || a == "language" || a == "CMS" || a == "firewall"){
+						if(a != "error")
+							t += "\n" + a + ":" + datos[dato][metodo][met][a]+ "\n";
+						else
+							console.log(metodo + " - " + a + " - " + datos[dato][metodo][met][a])
+					} else {
+						if(Array.isArray(datos[dato][metodo][met][a])){
+							for(subDato in datos[dato][metodo][met][a]){
+								for(subSubDato in datos[dato][metodo][met][a][subDato]) {
+									console.log(metodo + " - " + a + " - " + subSubDato + " : " + datos[dato][metodo][met][a][subDato][subSubDato]);
+								}
+							}
+						} else {
+							if(typeof datos[dato][metodo][met][a] == "object"){
+								for(subDatos in datos[dato][metodo][met][a]){
+									console.log(metodo + " - " + a + " - " + subDatos + " : " + datos[dato][metodo][met][a][subDatos]);
+								}
+							} else {
+								console.log(metodo + " - " + a + " - " + datos[dato][metodo][met][a]);
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	if(metodo == "getSublist3r_" + dominio)
+		metodo = "getSublist3r";
+	if($(".metodo_"+metodo)){
+		$(".metodo_"+metodo).remove();
+	}
+	span.innerHTML = t;
 }
 
 // Le pasas un texto para que lo diga en alto
@@ -269,7 +336,6 @@ function agregarMarcadorYVolar(datos){
 		// Python con multifunciones multithread
 		metodoPython = CONF.core.servicioPython.metodoPredefinido;
 		if(metodoPython == 'all'){
-			metodos = ["getWhoIs","getNsLookUp","getNmap","getHarvest","getSublist3r","getWafW00f","getWhatWeb","getSpaghetti","getWpscan","getWpscanner"];
 			for(m in metodos)
 				servicioPython(busqueda, metodos[m])
 		} else {
@@ -313,7 +379,8 @@ function servicioPython(dominio, metodo){
 	    	if(!datos[dominio])
 	    		datos[dominio] = [];
 	    	datos[dominio].push(JSON.parse(data.domain));
-	        console.log(datos);
+	    	updateSection(dominio, datos[dominio], metodo);
+	        //console.log(datos);
 	    }
 	})
 }

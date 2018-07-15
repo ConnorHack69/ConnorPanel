@@ -41,7 +41,7 @@ class Funciones(object):
 					res.append({'city' : city})
 			if "Acceso restringido" in ou:
 				res.append({"error" : "Acceso restringido"})
-		return json.dumps({"whois" : res})
+		return json.dumps({"getWhoIs" : res})
 
 	def getNsLookUp(self):
 		res=[]
@@ -52,7 +52,7 @@ class Funciones(object):
 				if num[1] != '\n' and "#" not in num[1]:
 					parsedNum=num[1].split("\n")[0].strip()
 					res.append({"ip" : parsedNum})
-		return json.dumps({"nslookup" : res})
+		return json.dumps({"getNsLookUp" : res})
 
 	def getNmap(self):
 		res=[]
@@ -66,7 +66,7 @@ class Funciones(object):
 			#if "Aggressive OS guesses" in ou:
 				#res.append({'OS_aggresive' : ou.split(":")[1]})
 		res.append({"ports" : ports})
-		return json.dumps({"nmap" : res})
+		return json.dumps({"getNmap" : res})
 
 	def getHarvest(self, buscador="all", cantidad=1000):
 		# Permisos modulo
@@ -84,14 +84,14 @@ class Funciones(object):
 					for ou in output:
 						if "@" in ou:
 							res.append({"email" : ou.replace("\n","").replace("*","").strip()})
-					return json.dumps({"emailHarvest" : res})
+					return json.dumps({"getHarvest" : res})
 		else:
 			res=[]
 			output=subprocess.Popen([self.root + "Module/theHarvester/theHarvester.py", "-d", self.domain , "-l", str(cantidad), "-b", buscador], stdout=subprocess.PIPE).stdout.readlines()
 			for ou in output:
 				if "@" in ou:
 					res.append({"email" : ou.replace("\n","").replace("*","").strip()})
-			return json.dumps({"emailHarvest" : res})
+			return json.dumps({"getHarvest" : res})
 
 	def getSublist3r(self):
 		# Permisos modulo
@@ -107,7 +107,7 @@ class Funciones(object):
 				res.append({"domain" : ou.replace("\n","").split(self.domain)[0].split("92m")[1].strip() + str(self.domain)})
 		if not encontrado:
 			res.append({"error" : "No se han encontrado subdominios"})
-		return json.dumps({"subdomains_" + str(self.domain) : res})
+		return json.dumps({"getSublist3r_" + str(self.domain) : res})
 
 	def getWafW00f(self):
 		res=[]
@@ -123,7 +123,7 @@ class Funciones(object):
 				res.append({"header_normal" : ou.split("a normal response is")[1].split(",")[0].replace('\"',"").replace("\n","").strip()})
 			if "a response to an attack is" in ou:
 				res.append({"header_attacker" : ou.split("a response to an attack is")[1].split(",")[0].replace('\"',"").replace("\n","").strip()})
-		return json.dumps({"wafw00f" : res})
+		return json.dumps({"getWafW00f" : res})
 		
 	def getXSS(self):
 		# Permisos modulo
@@ -146,7 +146,7 @@ class Funciones(object):
 				res.append({"links" : "NO hay links vulnerables"})
 		except:
 			res.append({"links" : "NO hay links vulnerables"})
-		return json.dumps({"xss" : res})
+		return json.dumps({"getXSS" : res})
 		
 	def getWhatWeb(self):
 		# Permisos modulo
@@ -167,7 +167,7 @@ class Funciones(object):
 				res.append({"titulo" : titulo})
 		if not hasTitle:
 			res.append({"titulo" : "No se ha encontrado el titulo del dominio"})
-		return json.dumps({"whatWeb" : res})
+		return json.dumps({"getWhatWeb" : res})
 		
 	def getSpaghetti(self):
 		# Permisos modulo
@@ -184,7 +184,7 @@ class Funciones(object):
 				res.append({"CMS" : ou.split(":")[1].replace("\x1b[0m", "").strip()})
 			if "Server" in ou:
 				res.append({"server" : ou.split(":")[1].replace("\x1b[0m", "").strip()})
-		return json.dumps({"spaghetti" : res})
+		return json.dumps({"getSpaghetti" : res})
 		
 	def getWpscan(self):
 		res=[]
@@ -196,7 +196,7 @@ class Funciones(object):
 				res.append({"scan" : ou.split(":")[1].strip()})
 		if not encontrado:
 			res.append({"scan" : "No se ha podido escanear el servicio WP"})
-		return json.dumps({"wpscan" : res})
+		return json.dumps({"getWpscan" : res})
 		
 	def getWpscanner(self):
 		# Permisos modulo
@@ -213,7 +213,7 @@ class Funciones(object):
 				encontrado=True
 			if "Could not find anything" in ou:
 				res.append({"wps" : 'no_wpscanner'})
-		return json.dumps({"wpscanner" : res})
+		return json.dumps({"getWpscanner" : res})
 		
 	def getWordPress(self):
 		res=[]
@@ -226,7 +226,7 @@ class Funciones(object):
 				res.append({ou.split(" ")[0] : ou.split(" ")[1].replace("\n","")})
 			if "Plugins found" in ou:
 				hayPlugins=True
-		return json.dumps({"wordpress" : res})
+		return json.dumps({"getWordPress" : res})
 		
 	def getWPSeku(self):
 		print("Cargando getWPSeku()")
@@ -306,55 +306,6 @@ class Funciones(object):
 		print("Comando: '"+command+"'")
 		os.system(command)
 
-	def getALL(self):
-		if os.geteuid() == 0:
-			os.system("mkdir -p " + self.domain)
-			self.getWhoIs()
-			self.getNsLookUp()
-			self.getNmap()
-			self.getHarvest()
-			#self.getMetaGoofil()
-			#self.getDNSRecon()
-			#self.getDig()
-			self.getSublist3r()
-			self.getWafW00f()
-			#self.getFullInfoGath()
-			#self.getXSS()
-			self.getWhatWeb()
-			self.getSpaghetti()
-			#self.getWpscan()
-			#self.getWpscanner()
-			#self.getWordPress()
-			#self.getWPSeku()
-			#self.getJoomScan()
-			#self.getJoomla()
-			#self.getDrupal()
-			self.getSilverStripe()
-			self.getMoodle()
-			self.getSSLScan()
-			self.getSSLyze()
-			self.getA2SVu()
-			self.getA2SVt()
-			#self.getWaffNinja()
-			self.getDirSearchPHP()
-			self.getDirSearchASP()
-		else:
-			print("No puedes ejecutar estas funciones sin privilegios de administrador")
-
-	def returnAll(self):
-		respuesta=[]
-		respuesta.append(self.getWhoIs())
-		respuesta.append(self.getNsLookUp())
-		respuesta.append(self.getNmap())
-		respuesta.append(self.getHarvest("bing"))
-		respuesta.append(self.getSublist3r())
-		respuesta.append(self.getWafW00f())
-		respuesta.append(self.getWhatWeb())
-		respuesta.append(self.getSpaghetti())
-		respuesta.append(self.getWpscan())
-		respuesta.append(self.getWpscanner())
-		print(json.dumps(respuesta))
-
 if sys.argv[1]:
 	funciones = Funciones(sys.argv[1])
 	if len(sys.argv) == 3:
@@ -398,8 +349,8 @@ if sys.argv[1]:
 			elif sys.argv[2] == "getDirSearchASP":
 				print(funciones.getDirSearchASP())
 			else:
-				funciones.returnAll()
+				print("No existe la funcion")
 		else:
-			funciones.returnAll()
+			print("No existe la funcion")
 	else:
-		funciones.returnAll()
+		print("No existe la funcion")

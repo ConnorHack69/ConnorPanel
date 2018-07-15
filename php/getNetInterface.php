@@ -11,5 +11,8 @@
 			$array = ["interfaz" => $arrayLinea[0], "miIP" => $ip, "nombreRed" => $nombreRed];
 			echo json_encode($array);
 		}
+		if(strpos($linea, "no wireless")){
+			$noHayWifi = true;
+		}
 	}
 ?>
