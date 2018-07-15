@@ -104,7 +104,7 @@ class Funciones(object):
 		for ou in output:
 			if "[-]" not in ou and self.domain in ou:
 				encontrado=True
-				res.append({"domain" : ou.replace("\n","").split(self.domain)[0].split("92m")[1].strip() + str(self.domain)})
+				res.append({"domain" : str("http://") + ou.replace("\n","").split(self.domain)[0].split("92m")[1].strip() + str(self.domain)})
 		if not encontrado:
 			res.append({"error" : "No se han encontrado subdominios"})
 		return json.dumps({"getSublist3r_" + str(self.domain) : res})

@@ -15,16 +15,35 @@ var expEsIp = CONF.interfaz.panel.buscador.expresiones.esIp;
 var datos = [];
 var buscando = false;
 
-var metodos = ["getWhoIs","getNsLookUp","getNmap","getHarvest","getSublist3r","getWafW00f","getWhatWeb","getSpaghetti","getWpscan","getWpscanner"];
+var metodos = CONF.core.servicioPython.metodos;
 
 // Cambia la anchura del campo de busqueda cada vez que se cambia su contenido
 $("#buscador").on('change', actualizarTamanioBuscador());
+$("#buscador").keypress(function(e) {
+    if(e.which == 13) {
+    	e.preventDefault();
+        buscar();
+    } else {
+    	actualizarTamanioBuscador();
+    }
+});
+$("#buscador").bind("paste", function(e){
+	setTimeout(function() {
+    	actualizarTamanioBuscador();
+    }, 100);
+} );
+$("#buscador").bind("cut", function(e){
+    setTimeout(function() {
+    	actualizarTamanioBuscador();
+    }, 100);
+} );
 
 // Actializa la anchura del campo de texto
 function actualizarTamanioBuscador() {
   	clearTimeout(typingTimer);
+    buscadorInput.val(buscadorInput.val().toLowerCase());
     buscadorInput.attr('size',(buscadorInput.val() !== '')?buscadorInput.val().length:1);
-  	typingTimer = setTimeout(buscar, doneTypingInterval);
+  	//typingTimer = setTimeout(buscar, doneTypingInterval);
 };
 
 // Busca el dominio de una IP
@@ -86,10 +105,9 @@ function buscarIP(busqueda){
 
 // Función principal de búsqueda. Aquí se irán añadiendo nuevas funciones al buscador
 function buscar() {
-	clearTimeout(typingTimer);
-    buscadorInput.val(buscadorInput.val().toLowerCase());
+	//clearTimeout(typingTimer);
+	//actualizarTamanioBuscador();
 	var busqueda = buscadorInput.val();
-	actualizarTamanioBuscador();
 	
 	if(busqueda.length > 3 && !buscando){
 		switch (true) {
@@ -175,25 +193,61 @@ function updateSection(dominio, datos, metodo){
 			for(met in datos[dato][metodo]){
 				for (a in datos[dato][metodo][met]) {
 					// Mejorar esto con una lista desde configuracion CONF para cargar junto con la estructura del python json_io.py
-					if(a == "ip" || a == "phone" || a == "provice" || a == "city" || a == "error" || a == "server" || a == "language" || a == "CMS" || a == "firewall"){
-						if(a != "error")
-							t += "\n" + a + ":" + datos[dato][metodo][met][a]+ "\n";
-						else
-							console.log(metodo + " - " + a + " - " + datos[dato][metodo][met][a])
+					var posiblesRespuestas = CONF.core.servicioPython.respuestas;
+					var mensajes = CONF.core.servicioPython.mensajes;
+					if(posiblesRespuestas.indexOf(a) > -1) {
+						if(a != "error") {
+							if(a == "ip" && !expEsIp.test(datos[dato][metodo][met][a]))
+								notificacion.notificar(
+									"error", 
+									dominio, 
+									mensajes.errorFuncion + metodo + ", IP: " + datos[dato][metodo][met][a],
+									"",
+									true
+								);
+							else
+								t += "\n" + a + ":" + datos[dato][metodo][met][a]+ "\n";
+						} else {
+							notificacion.notificar(
+								"error", 
+								dominio, 
+								mensajes.errorFuncion + metodo + ", " + datos[dato][metodo][met][a],
+								"",
+								true
+							);
+						}
 					} else {
 						if(Array.isArray(datos[dato][metodo][met][a])){
 							for(subDato in datos[dato][metodo][met][a]){
 								for(subSubDato in datos[dato][metodo][met][a][subDato]) {
-									console.log(metodo + " - " + a + " - " + subSubDato + " : " + datos[dato][metodo][met][a][subDato][subSubDato]);
+									notificacion.notificar(
+										"info", 
+										dominio, 
+										mensajes.respuestaFuncion + metodo + ", " + a + ", " + subSubDato + " : " + datos[dato][metodo][met][a][subDato][subSubDato],
+										"",
+										true
+									);
 								}
 							}
 						} else {
 							if(typeof datos[dato][metodo][met][a] == "object"){
 								for(subDatos in datos[dato][metodo][met][a]){
-									console.log(metodo + " - " + a + " - " + subDatos + " : " + datos[dato][metodo][met][a][subDatos]);
+									notificacion.notificar(
+										"info", 
+										dominio, 
+										mensajes.respuestaFuncion + metodo + ", " + a + ", " + subDatos + " : " + datos[dato][metodo][met][a][subDatos],
+										"",
+										true
+									);
 								}
 							} else {
-								console.log(metodo + " - " + a + " - " + datos[dato][metodo][met][a]);
+								notificacion.notificar(
+									"info", 
+									dominio, 
+									mensajes.respuestaFuncion + metodo + ", " + a + " : " + datos[dato][metodo][met][a],
+									"",
+									true
+								);
 							}
 						}
 					}

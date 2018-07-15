@@ -19,7 +19,13 @@ var CONF = {
 			}
 		},
 		"servicioPython" : {
-			"metodoPredefinido" : "all"
+			"metodoPredefinido" : "all",
+			"metodos" : ["getWhoIs","getNsLookUp","getNmap","getHarvest","getSublist3r","getWafW00f","getWhatWeb","getSpaghetti","getWpscan","getWpscanner"],
+			"respuestas" : ["ip", "phone", "provice", "city", "server", "language", "CMS", "firewall", "error"],
+			"mensajes" : {
+				"errorFuncion" : "Error en la funcion: ",
+				"respuestaFuncion" : "Respuesta de: "
+			}
 		}
 	},
 	"mapa" : {
