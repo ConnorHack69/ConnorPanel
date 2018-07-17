@@ -166,11 +166,11 @@ function addToSection(busqueda, ip){ // Section es la barra lateral derecha que 
 		pDatos.setAttribute("class", metodos[meth]);
 
 		var span = document.createElement("span");
-		span.setAttribute("class", "metodo_"+metodos[meth])
+		span.setAttribute("class", busqueda.replace(".","") + "_metodo_"+metodos[meth])
 		span.innerHTML = metodos[meth];
 
 		var spanCargando = document.createElement("span");
-		spanCargando.setAttribute("class", "cargando_"+metodos[meth]);
+		spanCargando.setAttribute("class", busqueda.replace(".","") + "_cargando_"+metodos[meth]);
 		spanCargando.innerHTML = "Cargando";
 
 		pDatos.appendChild(span);
@@ -184,7 +184,7 @@ function addToSection(busqueda, ip){ // Section es la barra lateral derecha que 
 
 function updateSection(dominio, datos, metodo){
 	var section = document.getElementById(dominio);
-	var span = section.getElementsByClassName("cargando_"+metodo)[0];
+	var span = section.getElementsByClassName(dominio.replace(".","") + "_cargando_"+metodo)[0];
 	var t = "";
 	if(metodo == "getSublist3r")
 		metodo = "getSublist3r_" + dominio;
@@ -197,6 +197,7 @@ function updateSection(dominio, datos, metodo){
 					var mensajes = CONF.core.servicioPython.mensajes;
 					if(posiblesRespuestas.indexOf(a) > -1) {
 						if(a != "error") {
+							// Si pone IP pero no es formato IP
 							if(a == "ip" && !expEsIp.test(datos[dato][metodo][met][a]))
 								notificacion.notificar(
 									"error", 
@@ -205,9 +206,10 @@ function updateSection(dominio, datos, metodo){
 									"",
 									true
 								);
-							else
+							else // Cualquier valor válido que esté en la lista de posiblesRespuestas
 								t += "\n" + a + ":" + datos[dato][metodo][met][a]+ "\n";
 						} else {
+							// Viene con error desde Python
 							notificacion.notificar(
 								"error", 
 								dominio, 
@@ -217,6 +219,7 @@ function updateSection(dominio, datos, metodo){
 							);
 						}
 					} else {
+						// Es una array de arrays
 						if(Array.isArray(datos[dato][metodo][met][a])){
 							for(subDato in datos[dato][metodo][met][a]){
 								for(subSubDato in datos[dato][metodo][met][a][subDato]) {
@@ -230,6 +233,7 @@ function updateSection(dominio, datos, metodo){
 								}
 							}
 						} else {
+							// Es de tipo array
 							if(typeof datos[dato][metodo][met][a] == "object"){
 								for(subDatos in datos[dato][metodo][met][a]){
 									notificacion.notificar(
@@ -241,6 +245,7 @@ function updateSection(dominio, datos, metodo){
 									);
 								}
 							} else {
+								// Datos sin parsear por posiblesRespuestas. Estos datos iran a otro panel y/o BBDD
 								notificacion.notificar(
 									"info", 
 									dominio, 
@@ -255,11 +260,13 @@ function updateSection(dominio, datos, metodo){
 			}
 		}
 	}
+	// Sublister devuelve con el dominio por si hacemos recursividad a los subdominios
 	if(metodo == "getSublist3r_" + dominio)
 		metodo = "getSublist3r";
-	if($(".metodo_"+metodo)){
-		$(".metodo_"+metodo).remove();
-	}
+	// Borramos los elementos del dom que no hace falta listar mas
+	if($("."+dominio.replace(".","") + "_metodo_"+metodo))
+		$("."+dominio.replace(".","") + "_metodo_"+metodo).remove();
+	// Añadimos los datos que queramos mostrar al usuario
 	span.innerHTML = t;
 }
 

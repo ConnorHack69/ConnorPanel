@@ -1,6 +1,8 @@
 import os
 import subprocess
 
+import mysql.connector
+
 from flask import Flask, render_template, request, jsonify
 
 app = Flask(__name__)
@@ -26,5 +28,25 @@ def process():
 	else:
 		return jsonify({"error" : "Falta el dominio!"})
 
+@app.route('/bbdd')
+def bbdd():
+	config = {
+	  'user': 'root',
+	  'password': '001FAF7C6677',
+	  'host': '127.0.0.1',
+	  'database': 'panel'
+	}
+	cnx = mysql.connector.connect(**config)
+	cursor = cnx.cursor()
+
+	cursor.execute("SELECT dominio, ip, location, lon, lat FROM dominio")
+	datos = ''
+	for (dominio, ip, location, lon, lat) in cursor:
+		datos+=str(str("dominio: ") + str(dominio) + str(", ip: ") + str(ip) + str(", location: ") + str(location) + str(", lon: ") + str(lon )+ str(", lat: ") + str(lat) + str("; "))
+
+	cursor.close()
+	cnx.close()
+
+	return datos
 if __name__ == '__main__':
 	app.run(debug=True, threaded=True)
