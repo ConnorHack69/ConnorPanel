@@ -93,7 +93,6 @@
 	</div>
 	<!-- Primero importamos la configuración básica de la web -->
 	<script src='js/configuracion.js'></script>
-	<script src='js/reconfigurarVariable.js'></script>
 
 	<!-- Ajax call and notification -->
 	<script src='js/db/database.js'></script>
