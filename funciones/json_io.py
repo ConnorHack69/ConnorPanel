@@ -1,5 +1,6 @@
 import os
 import subprocess
+import json
 
 import mysql.connector
 
@@ -28,7 +29,7 @@ def process():
 	else:
 		return jsonify({"error" : "Falta el dominio!"})
 
-@app.route('/bbdd')
+@app.route('/getBBDDconfig')
 def bbdd():
 	config = {
 	  'user': 'root',
@@ -39,14 +40,39 @@ def bbdd():
 	cnx = mysql.connector.connect(**config)
 	cursor = cnx.cursor()
 
-	cursor.execute("SELECT dominio, ip, location, lon, lat FROM dominio")
-	datos = ''
-	for (dominio, ip, location, lon, lat) in cursor:
-		datos+=str(str("dominio: ") + str(dominio) + str(", ip: ") + str(ip) + str(", location: ") + str(location) + str(", lon: ") + str(lon )+ str(", lat: ") + str(lat) + str("; "))
+	cursor.execute("SELECT jsonKey, value FROM conf_core")
+
+	configuracion = {}
+
+	for (jsonKey, value) in cursor:
+		# jsonKey == interfaz_panel_buscador_buscarDominioIP_urlAjax
+		claveDividida = jsonKey.split("_")
+
+		ultimaClave = claveDividida[-1]
+		claveDividida.pop()
+
+		# claveDividida == ["interfaz","panel","buscador","buscarDominioIP"]
+		# ultimaClave == ["urlAjax"]
+
+		tempDatos = configuracion
+
+		for clave in claveDividida:
+			try:
+			    tempDatos[clave]
+			except:
+			    tempDatos[clave] = {}
+			tempDatos = tempDatos[clave]
+
+		# tempDatos == tempDatos["interfaz"]["panel"]["buscador"]["busdarDominioIP"]
+		if value.isdigit():
+			tempDatos[ultimaClave] = int(value)
+		else:
+			tempDatos[ultimaClave] = value
 
 	cursor.close()
 	cnx.close()
 
-	return datos
+	return jsonify(configuracion)
+
 if __name__ == '__main__':
 	app.run(debug=True, threaded=True)

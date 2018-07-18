@@ -17,12 +17,6 @@ class Funciones(object):
 		super(Funciones, self).__init__()
 		self.root="/root/Yuki-Chan-The-Auto-Pentest/"
 		self.domain = dominio
-		try:
-			data = open('../js/configuracion.js', 'r').read()
-			aaaa=json.load(json.dumps(data.replace("var CONF = ","'").replace(";","'")))
-			print(aaaa)
-		except ValueError, e:
-			print(e)
 
 	def getWhoIs(self):
 		res=[]
