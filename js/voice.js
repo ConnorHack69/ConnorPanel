@@ -9,7 +9,7 @@ function escuchar(){
 	recognition.onresult = function(event) {
 		document.getElementById("buscador").value = event.results[0][0].transcript;
 		busquedaPorVoz = true;
-		actualizarTamañoBuscador();
+		actualizarTamanioBuscador();
 	};
 
 	recognition.start();

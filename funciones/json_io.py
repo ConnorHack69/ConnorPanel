@@ -29,8 +29,8 @@ def process():
 	else:
 		return jsonify({"error" : "Falta el dominio!"})
 
-@app.route('/getBBDDconfig')
-def bbdd():
+@app.route('/getBBDDconfig', methods=['POST'])
+def getBBDDconfig():
 	config = {
 	  'user': 'root',
 	  'password': '001FAF7C6677',
@@ -67,8 +67,19 @@ def bbdd():
 		if value.isdigit():
 			tempDatos[ultimaClave] = int(value)
 		else:
-			tempDatos[ultimaClave] = value
+			if value[0] == "[" and value[-1] == "]": # Listas ["insertarDominio", "getDominios"] los parseamos a list
+				tempDatos[ultimaClave] = map(unicode.strip, value.replace("[","").replace("]","").replace("\"","").split(","))
+			elif value[0] == "/":
+				tempDatos[ultimaClave] = value
+			else:
+				if "true" == value:
+					tempDatos[ultimaClave] = True
+				elif "false" == value:
+					tempDatos[ultimaClave] = False
+				else:
+					tempDatos[ultimaClave] = value
 
+		print value
 	cursor.close()
 	cnx.close()
 

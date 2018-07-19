@@ -9,8 +9,8 @@ var buscadorInput = $("#buscador");
 var startFlying = false;
 var busquedaPorVoz = false;
 
-var expEsDominio = CONF.interfaz.panel.buscador.expresiones.esDominio;
-var expEsIp = CONF.interfaz.panel.buscador.expresiones.esIp;
+var expEsDominio = new RegExp(CONF.interfaz.panel.buscador.expresiones.esDominio);
+var expEsIp = new RegExp(CONF.interfaz.panel.buscador.expresiones.esIp);
 
 var datos = [];
 var buscando = false;
